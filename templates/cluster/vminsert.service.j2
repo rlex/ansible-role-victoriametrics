@@ -1,0 +1,27 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=VictoriaMetrics vminsert service
+After=network.target
+
+[Service]
+Type=simple
+User={{ victoriametrics_cluster_user }}
+Group={{ victoriametrics_cluster_group }}
+ExecStart=/usr/local/bin/vminsert \
+{% for storage_node in victoriametrics_cluster_vminsert_storage_node %}
+  -storageNode={{ storage_node }} \
+{% endfor %}
+{% for flag, flag_value in victoriametrics_cluster_vminsert_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor -%}
+  -httpListenAddr={{ victoriametrics_cluster_vminsert_http_listen_addr }}
+
+SyslogIdentifier=vminsert
+Restart=always
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,26 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=VictoriaMetrics service
+After=network.target
+
+[Service]
+Type=simple
+User={{ victoriametrics_user }}
+Group={{ victoriametrics_group }}
+ExecStart=/usr/local/bin/victoria-metrics \
+  -retentionPeriod={{ victoriametrics_retention_period }} \
+  -storageDataPath={{ victoriametrics_storage_data_path }} \
+{% for flag, flag_value in victoriametrics_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor -%}
+  -httpListenAddr={{ victoriametrics_http_listen_addr }}
+
+SyslogIdentifier=vminsert
+Restart=always
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

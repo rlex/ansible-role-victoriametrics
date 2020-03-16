@@ -1,0 +1,47 @@
+- name: "Download victoriametrics vmutil files"
+  become: false
+  get_url:
+    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-v{{ victoriametrics_cluster_version }}.tar.gz"
+    dest: "/tmp/"
+  delegate_to: localhost
+
+- name: "Create temporary directory"
+  become: false
+  file:
+    path: /tmp/vmutils_{{ victoriametrics_cluster_version }}
+    state: directory
+  delegate_to: localhost
+
+- name: "Unarchive victoriametrics cluster files"
+  become: false
+  unarchive:
+    src: "/tmp/vmutils-v{{ victoriametrics_cluster_version }}.tar.gz"
+    remote_src: yes
+    dest: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/"
+    creates: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod"
+  delegate_to: localhost
+  check_mode: false
+
+- name: propagate vmbackup binary
+  copy:
+    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod"
+    dest: "/usr/local/bin/vmbackup"
+    mode: 0755
+    owner: "{{ victoriametrics_cluster_user }}"
+    group: "{{ victoriametrics_cluster_user }}"
+
+- name: propagate vmrestore binary
+  copy:
+    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmrestore-prod"
+    dest: "/usr/local/bin/vmrestore"
+    mode: 0755
+    owner: "{{ victoriametrics_cluster_user }}"
+    group: "{{ victoriametrics_cluster_user }}"
+
+- name: propagate vmagent binary
+  copy:
+    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmagent-prod"
+    dest: "/usr/local/bin/vmagent"
+    mode: 0755
+    owner: "{{ victoriametrics_cluster_user }}"
+    group: "{{ victoriametrics_cluster_user }}"

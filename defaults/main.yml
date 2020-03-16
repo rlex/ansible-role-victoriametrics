@@ -1,0 +1,38 @@
+## SINGLE-NODE
+victoriametrics_singlenode: false
+victoriametrics_user: victoriametrics
+victoriametrics_group: "{{ victoriametrics_cluster_user }}"
+victoriametrics_version: 1.34.3
+victoriametrics_retention_period: 3
+victoriametrics_storage_data_path: /var/lib/victoria-metrics/
+victoriametrics_args: {}
+victoriametrics_http_listen_addr: 8428
+
+## VMUTILS
+victoriametrics_vmutils: false
+
+## CLUSTER
+victoriametrics_cluster: false
+victoriametrics_cluster_user: "{{ victoriametrics_user }}"
+victoriametrics_cluster_group: "{{ victoriametrics_cluster_user }}"
+victoriametrics_cluster_version: "{{ victoriametrics_version }}"
+
+# CLUSTER-VMSTORAGE
+victoriametrics_cluster_vmstorage_retention_period: 3
+victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/victoria-metrics/
+victoriametrics_cluster_vmstorage_http_listen_addr: 0.0.0.0:8482
+victoriametrics_cluster_vmstorage_vminsert_addr: 0.0.0.0:8400
+victoriametrics_cluster_vmstorage_vmselect_addr: 0.0.0.0:8401
+victoriametrics_cluster_vmstorage_args: {}
+
+# CLUSTER-VMINSERT
+victoriametrics_cluster_vminsert_http_listen_addr: 0.0.0.0:8480
+victoriametrics_cluster_vminsert_storage_node:
+  - localhost:8400
+victoriametrics_cluster_vminsert_args: {}
+
+# CLUSTER-VMSELECT
+victoriametrics_cluster_vmselect_http_listen_addr: 0.0.0.0:8481
+victoriametrics_cluster_vmselect_storage_node:
+  - localhost:8401
+victoriametrics_cluster_vmselect_args: {}
