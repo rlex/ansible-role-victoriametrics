@@ -10,7 +10,12 @@ victoriametrics_http_listen_addr: 8428
 
 ## VMUTILS
 victoriametrics_vmutils: false
-
+victoriametrics_vmutils_files:
+  - vmagent
+  - vmalert
+  - vmauth
+  - vmbackup
+  - vmrestore
 ## CLUSTER
 victoriametrics_cluster: false
 victoriametrics_cluster_user: "{{ victoriametrics_user }}"
@@ -36,3 +41,20 @@ victoriametrics_cluster_vmselect_http_listen_addr: 0.0.0.0:8481
 victoriametrics_cluster_vmselect_storage_node:
   - localhost:8401
 victoriametrics_cluster_vmselect_args: {}
+
+# VMUTILS-VMAUTH
+victoriametrics_vmauth: false
+victoriametrics_vmauth_users: {}
+
+# VMUTILS-VMAGENT
+victoriametrics_vmagent: false
+victoriametrics_vmagent_global: {}
+victoriametrics_vmagent_scrape_configs: {}
+victoriametrics_vmagent_args: {}
+victoriametrics_vmagent_remotewrite_url: {}
+
+# VMUTILS-VMALERT
+victoriametrics_vmalert: false
+victoriametrics_vmalert_datasource_url: http://localhost:8428
+victoriametrics_vmalert_notifier_url: http://localhost:9093
+victoriametrics_vmalert_args: {}

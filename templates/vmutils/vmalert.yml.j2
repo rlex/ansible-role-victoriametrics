@@ -1,0 +1,4 @@
+groups:
+- name: ansible managed alert rules
+  rules:
+  {{ victoriametrics_vmalert_alert_rules | to_nice_yaml(indent=2) | indent(2,False) }}

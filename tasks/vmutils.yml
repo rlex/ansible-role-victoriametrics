@@ -12,7 +12,7 @@
     state: directory
   delegate_to: localhost
 
-- name: "Unarchive victoriametrics cluster files"
+- name: "Unarchive victoriametrics vmutils files"
   become: false
   unarchive:
     src: "/tmp/vmutils-v{{ victoriametrics_cluster_version }}.tar.gz"
@@ -22,26 +22,77 @@
   delegate_to: localhost
   check_mode: false
 
-- name: propagate vmbackup binary
+- name: propagate vmutils binaries
   copy:
-    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod"
-    dest: "/usr/local/bin/vmbackup"
+    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/{{ item }}-prod"
+    dest: "/usr/local/bin/{{ item }}"
     mode: 0755
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
+  loop: {{ victoriametics_vmutils_files }}
 
-- name: propagate vmrestore binary
-  copy:
-    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmrestore-prod"
-    dest: "/usr/local/bin/vmrestore"
-    mode: 0755
-    owner: "{{ victoriametrics_cluster_user }}"
-    group: "{{ victoriametrics_cluster_user }}"
+- name: create vmauth systemd service unit
+  template:
+    src: vmutils/vmauth.service.j2
+    dest: /etc/systemd/system/vmauth.service
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmauth and victoriametrics_vmauth is defined
+  notify:
+    - restart vmauth
 
-- name: propagate vmagent binary
-  copy:
-    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmagent-prod"
-    dest: "/usr/local/bin/vmagent"
-    mode: 0755
-    owner: "{{ victoriametrics_cluster_user }}"
-    group: "{{ victoriametrics_cluster_user }}"
+- name: configure vmauth
+  template:
+    src: vmutils/vmauth.yml.j2
+    dest: /etc/vmauth.yml
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmauth and victoriametrics_vmauth is defined
+  notify:
+    - restart vmauth
+
+- name: create vmagent systemd service unit
+  template:
+    src: vmutils/vmagent.service.j2
+    dest: /etc/systemd/system/vmagent.service
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmagent and victoriametrics_vmagent is defined
+  notify:
+    - restart vmagent
+
+- name: configure vmagent
+  template:
+    src: vmutils/vmagent.yml.j2
+    dest: /etc/vmagent.yml
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmagent and victoriametrics_vmagent is defined
+  notify:
+    - restart vmagent
+
+- name: create vmalert systemd service unit
+  template:
+    src: vmutils/vmalert.service.j2
+    dest: /etc/systemd/system/vmalert.service
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmalert and victoriametrics_vmalert is defined
+  notify:
+    - restart vmalert
+
+- name: configure vmalert
+  template:
+    src: vmutils/vmalert.yml.j2
+    dest: /etc/vmalert.yml
+    owner: root
+    group: root
+    mode: 0644
+  when: victoriametrics_vmalert and victoriametrics_vmalert is defined
+  notify:
+    - restart vmalert

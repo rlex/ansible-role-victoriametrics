@@ -126,5 +126,57 @@ Setting
 victoriametrics_vmutils: true
 ```
 
-Will install victoriametrics vmutils package (vmbackup, vmrestore, vmagent). It inherits version from victoriametrics_version.  
-There is no configuration available for that tools ATM, bit i plan to add some.
+Will install victoriametrics vmutils package (vmbackup, vmrestore, vmagent, vmauth, vmalert). It inherits version from victoriametrics_version.  
+
+
+## vmauth
+```yaml
+victoriametrics_vmauth: true
+victoriametrics_vmauth_users:
+  - username: "local-single-node"
+    password: "password"
+    url_prefix: "http://localhost:8428"
+  - username: "cluster-select-account-123"
+    password: "password"
+    url_prefix: "http://vmselect:8481/select/123/prometheus"
+  - username: "cluster-insert-account-42"
+    password: "password"
+    url_prefix: "http://vminsert:8480/insert/42/prometheus"
+```
+
+## vmagent
+```yaml
+victoriametrics_vmagent: true
+victoriametrics_vmagent_global:
+  evaluation_interval: 15s
+  scrape_interval: 15s
+  scrape_timeout: 10s
+victoriametrics_vmagent_external_labels:
+  environment: production
+victoriametrics_vmagent_remotewrite_url: http://localhost:8428/api/v1/write
+victoriametrics_vmagent_remotewrite_tmpdatapath: /tmp/vm_data
+victoriametrics_vmagent_remotewrite_maxdiskusageperurl: 
+victoriametrics_vmagent_scrape_configs:
+  - job_name: "telegraf-pull"
+    metrics_path: /metrics
+    basic_auth:
+      username: username
+      password: password
+    static_configs:
+      - targets:
+        - localhost:9755
+```
+
+## vmalert 
+```yaml
+victoriametrics_vmalert: true
+victoriametrics_vmalert_alert_rules:
+  - alert: Instance down
+    expr: 'up == 0'
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: '{% raw %}Exporter down{% endraw %}'
+      description: '{% raw %}Prometheus node {{ $labels.instance }} is down{% endraw %}'
+```

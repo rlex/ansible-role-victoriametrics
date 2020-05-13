@@ -1,0 +1,25 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=VictoriaMetrics vmagent
+After=network.target
+
+[Service]
+Type=simple
+User={{ victoriametrics_user }}
+Group={{ victoriametrics_group }}
+ExecStart=/usr/local/bin/vmagent \
+  -promscrape.config=/etc/vmagent.yml \
+{% for flag, flag_value in victoriametrics_vmagent_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor -%}
+  -remoteWrite.url={{ victoriametrics_vmagent_remotewrite_url }}
+
+SyslogIdentifier=vmagent
+Restart=always
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=VictoriaMetrics vmauth
+After=network.target
+
+[Service]
+Type=simple
+User={{ victoriametrics_user }}
+Group={{ victoriametrics_group }}
+ExecStart=/usr/local/bin/vmauth \
+  -auth.config=/etc/vmauth.yml
+{% for flag, flag_value in victoriametrics_vmauth_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor -%}
+
+SyslogIdentifier=vmauth
+Restart=always
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+global:
+  {{ victoriametrics_vmagent_global | to_nice_yaml(indent=2) | indent(2, False) }}
+  external_labels:
+    {{ victoriametrics_vmagent_external_labels | to_nice_yaml(indent=2) | indent(4, False) }}
+
+scrape_configs:
+  {{ victoriametrics_vmagent_scrape_configs | to_nice_yaml(indent=2) | indent(2,False) }}

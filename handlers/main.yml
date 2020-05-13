@@ -27,3 +27,24 @@
     daemon_reload: true
     name: victoriametrics
     state: restarted
+
+- name: restart vmauth
+  become: true
+  systemd:
+    daemon_reload: true
+    name: vmauth
+    state: restarted
+
+- name: restart vmagent
+  become: true
+  systemd:
+    daemon_reload: true
+    name: vmagent
+    state: restarted
+
+- name: restart vmalert
+  become: true
+  systemd:
+    daemon_reload: true
+    name: vmalert
+    state: restarted

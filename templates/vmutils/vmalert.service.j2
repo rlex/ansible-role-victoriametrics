@@ -1,0 +1,26 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=VictoriaMetrics vmalert
+After=network.target
+
+[Service]
+Type=simple
+User={{ victoriametrics_user }}
+Group={{ victoriametrics_group }}
+ExecStart=/usr/local/bin/vmalert \
+  -rule=/etc/vmalert.yml \
+  -datasource.url={{ victoriametrics_vmalert_datasource_url }} \
+{% for flag, flag_value in victoriametrics_vmalert_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor -%}
+  -notifier.url={{ victoriametrics_vmalert_notifier_url }}
+
+SyslogIdentifier=vmalert
+Restart=always
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
