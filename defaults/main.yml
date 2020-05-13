@@ -16,6 +16,7 @@ victoriametrics_vmutils_files:
   - vmauth
   - vmbackup
   - vmrestore
+
 ## CLUSTER
 victoriametrics_cluster: false
 victoriametrics_cluster_user: "{{ victoriametrics_user }}"

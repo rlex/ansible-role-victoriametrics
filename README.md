@@ -126,10 +126,27 @@ Setting
 victoriametrics_vmutils: true
 ```
 
-Will install victoriametrics vmutils package (vmbackup, vmrestore, vmagent, vmauth, vmalert). It inherits version from victoriametrics_version.  
+Will install victoriametrics vmutils binaries (vmbackup, vmrestore, vmagent, vmauth, vmalert). It inherits version from victoriametrics_version and permissions from victoriametrics_users/victoriametrics_group. You can control which packages to install with victoriametrics_vmutils_files array, ie:
 
+```yaml
+victoriametrics_vmutils_files:
+  - vmagent
+  - vmalert
+  - vmauth
+  - vmbackup
+  - vmrestore
+```
 
 ## vmauth
+
+vmauth-related variables:
+| Variable name                | Default value | Description                             |
+| ---------------------------- | ------------- | --------------------------------------- |
+| victoriametrics_vmauth       | `false`       | enables vmauth if set to true           |
+| victoriametrics_vmauth_users | `{}`          | YAML with users, follow original format |
+| victoriametrics_vmauth_args  | `{}`          | additional arguments to pass to vmauth  |
+
+Sample config:
 ```yaml
 victoriametrics_vmauth: true
 victoriametrics_vmauth_users:
@@ -145,6 +162,19 @@ victoriametrics_vmauth_users:
 ```
 
 ## vmagent
+
+vmagent-related variables:
+| Variable name                                   | Default value                        | Description                                       |
+| ----------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
+| victoriametrics_vmagent                         | `false`                              | enables vmagent if set to true                    |
+| victoriametrics_vmagent_global                  | `{}`                                 | YAML with prometheus global settings              |
+| victoriametrics_vmagent_external_labels         | `{}`                                 | YAML with prometheus external labels              |
+| victoriametrics_vmagent_remotewrite_url         | `http://localhost:8428/api/v1/write` | URL to victoriametrics instance for writing       |
+| victoriametrics_vmagent_remotewrite_tmpdatapath | `{}`                                 | Folder to keep metrics if remotewrite_url is down |
+| victoriametrics_vmagent_scrape_configs          | `{}`                                 | YAML with prometheus scrape_configs               |
+| victoriametrics_vmagent_args                    | `{}`                                 | additional arguments to pass to vmagent           |
+
+Sample config, adding prometheus label environment=production, setting tmp folder to /var/lib/vmagent/tmp (folder will be created by role with proper permissions), and adding single scrape job from localhost:
 ```yaml
 victoriametrics_vmagent: true
 victoriametrics_vmagent_global:
@@ -167,8 +197,21 @@ victoriametrics_vmagent_scrape_configs:
 ```
 
 ## vmalert 
+
+vmalert-related variables:
+| Variable name                          | Default value           | Description                                              |
+| -------------------------------------- | ----------------------- | -------------------------------------------------------- |
+| victoriametrics_vmalert                | `false`                 | enables vmalert if set to true                           |
+| victoriametrics_vmalert_datasource_url | `http://localhost:8428` | URL with datasource from which vmalert will read metrics |
+| victoriametrics_vmalert_notifier_url   | `http://localhost:9093` | URL with alertmanager instance                           |
+| victoriametrics_vmalert_alert_rules    | `{}`                    | YAML with prometheus alert rules                         |
+| victoriametrics_vmalert_args           | `{}`                    | additional arguments to pass to vmalert                  |
+
+Sample config, pointing to local victoriametrics instance and local alertmanager instance, with single rule to check for exporters in "down" state:
 ```yaml
 victoriametrics_vmalert: true
+victoriametrics_vmalert_datasource_url: http://localhost:8428
+victoriametrics_vmalert_notifier_url: http://localhost:9093
 victoriametrics_vmalert_alert_rules:
   - alert: Instance down
     expr: 'up == 0'
