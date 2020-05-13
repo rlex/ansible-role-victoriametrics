@@ -154,8 +154,7 @@ victoriametrics_vmagent_global:
 victoriametrics_vmagent_external_labels:
   environment: production
 victoriametrics_vmagent_remotewrite_url: http://localhost:8428/api/v1/write
-victoriametrics_vmagent_remotewrite_tmpdatapath: /tmp/vm_data
-victoriametrics_vmagent_remotewrite_maxdiskusageperurl: 
+victoriametrics_vmagent_remotewrite_tmpdatapath: /var/lib/vmagent/tmp
 victoriametrics_vmagent_scrape_configs:
   - job_name: "telegraf-pull"
     metrics_path: /metrics

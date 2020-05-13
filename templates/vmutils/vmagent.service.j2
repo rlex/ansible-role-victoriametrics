@@ -12,6 +12,7 @@ ExecStart=/usr/local/bin/vmagent \
 {% for flag, flag_value in victoriametrics_vmagent_args.items() -%}
   -{{ flag }}={{ flag_value }} \
 {% endfor -%}
+  -remoteWrite.tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }} \
   -remoteWrite.url={{ victoriametrics_vmagent_remotewrite_url }}
 
 SyslogIdentifier=vmagent
