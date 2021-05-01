@@ -1,7 +1,7 @@
 - name: "Download victoriametrics vmutils files"
   become: false
   get_url:
-    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-v{{ victoriametrics_cluster_version }}.tar.gz"
+    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
     dest: "/tmp/"
   delegate_to: localhost
 
@@ -15,7 +15,7 @@
 - name: "Unarchive victoriametrics vmutils files"
   become: false
   unarchive:
-    src: "/tmp/vmutils-v{{ victoriametrics_cluster_version }}.tar.gz"
+    src: "/tmp/vmutils-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
     remote_src: yes
     dest: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/"
     creates: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod"

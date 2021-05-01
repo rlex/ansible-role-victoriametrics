@@ -22,7 +22,7 @@
 - name: "Download victoriametrics files"
   become: false
   get_url:
-    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-v{{ victoriametrics_cluster_version }}.tar.gz"
+    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
     dest: "/tmp/"
   delegate_to: localhost
 
@@ -36,7 +36,7 @@
 - name: "Unarchive victoriametrics files"
   become: false
   unarchive:
-    src: "/tmp/victoria-metrics-v{{ victoriametrics_version }}.tar.gz"
+    src: "/tmp/victoria-metrics-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz"
     remote_src: yes
     dest: "/tmp/victoriametrics_{{ victoriametrics_version }}/"
     creates: "/tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod"
