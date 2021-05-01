@@ -17,6 +17,7 @@ victoriametrics_vmutils_files:
   - vmauth
   - vmbackup
   - vmrestore
+  - vmctl
 
 ## CLUSTER
 victoriametrics_cluster: false
