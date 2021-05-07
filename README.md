@@ -35,6 +35,7 @@ Role variables related to single-node setup:
 | victoriametrics_storage_data_path | `/var/lib/victoria-metrics/`         | path to victoriametrics data dir         |
 | victoriametrics_args              | `{}`                                 | optional args to pass to victoriametrics |
 | victoriametrics_http_listen_addr  | `127.0.0.1:8428`                     | port to listen on                        |
+| victoriametrics_arch              | `amd64`                              | binary architecture (amd64/arm/arm64)  |
 
 ## Cluster
 
