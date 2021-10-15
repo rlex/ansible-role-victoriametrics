@@ -6,6 +6,7 @@
     daemon_reload: true
     name: vmselect
     state: restarted
+    enabled: true
 
 - name: restart vminsert
   become: true
@@ -13,6 +14,7 @@
     daemon_reload: true
     name: vminsert
     state: restarted
+    enabled: true
 
 - name: restart vmstorage
   become: true
@@ -20,6 +22,7 @@
     daemon_reload: true
     name: vmstorage
     state: restarted
+    enabled: true
 
 - name: restart victoriametrics
   become: true
@@ -27,6 +30,7 @@
     daemon_reload: true
     name: victoriametrics
     state: restarted
+    enabled: true
 
 - name: restart vmauth
   become: true
@@ -34,6 +38,7 @@
     daemon_reload: true
     name: vmauth
     state: restarted
+    enabled: true
 
 - name: restart vmagent
   become: true
@@ -41,6 +46,7 @@
     daemon_reload: true
     name: vmagent
     state: restarted
+    enabled: true
 
 - name: restart vmalert
   become: true
@@ -48,3 +54,4 @@
     daemon_reload: true
     name: vmalert
     state: restarted
+    enabled: true
