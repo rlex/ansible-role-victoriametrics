@@ -2,7 +2,7 @@
 victoriametrics_singlenode: false
 victoriametrics_user: victoriametrics
 victoriametrics_group: "{{ victoriametrics_cluster_user }}"
-victoriametrics_version: 1.59.0
+victoriametrics_version: 1.67.0
 victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics/
 victoriametrics_args: {}

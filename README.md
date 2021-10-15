@@ -30,7 +30,7 @@ Role variables related to single-node setup:
 | victoriametrics_singlenode        | `false`                              | installs single node if set to true      |
 | victoriametrics_user              | `victoriametrics`                    | victoriametrics system user              |
 | victoriametrics_group             | `{{ victoriametrics_cluster_user }}` | victoriametrics system group             |
-| victoriametrics_version           | `1.34.3`                             | victoriametrics version                  |
+| victoriametrics_version           | `1.67.0`                             | victoriametrics version                  |
 | victoriametrics_retention_period  | `3`                                  | data retention period in months          |
 | victoriametrics_storage_data_path | `/var/lib/victoria-metrics/`         | path to victoriametrics data dir         |
 | victoriametrics_args              | `{}`                                 | optional args to pass to victoriametrics |
