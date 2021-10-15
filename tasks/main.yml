@@ -1,3 +1,4 @@
+- import_tasks: user.yml
 - import_tasks: singlenode.yml
   when: victoriametrics_singlenode and victoriametrics_singlenode is defined
 - import_tasks: cluster.yml

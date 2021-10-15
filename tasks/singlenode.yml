@@ -1,17 +1,3 @@
-- name: create victoriametrics system group
-  group:
-    name: "{{ victoriametrics_user }}"
-    system: true
-    state: present
-
-- name: create victoriametrics system user
-  user:
-    name: "{{ victoriametrics_user }}"
-    system: true
-    shell: "/usr/sbin/nologin"
-    group: "{{ victoriametrics_user }}"
-    createhome: false
-
 - name: create victoriametrics storage directory
   file:
     path: "{{ victoriametrics_storage_data_path }}"
