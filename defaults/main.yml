@@ -8,7 +8,7 @@ victoriametrics_user: victoriametrics
 victoriametrics_group: "{{ victoriametrics_user }}"
 victoriametrics_version: 1.95.1
 victoriametrics_retention_period: 3
-victoriametrics_storage_data_path: /var/lib/victoria-metrics/
+victoriametrics_storage_data_path: /var/lib/victoria-metrics
 victoriametrics_args: {}
 victoriametrics_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_envs: {}
@@ -36,7 +36,7 @@ victoriametrics_cluster_version: "{{ victoriametrics_version }}"
 # CLUSTER-VMSTORAGE
 victoriametrics_cluster_vmstorage_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_cluster_vmstorage_retention_period: 3
-victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/victoria-metrics/
+victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/victoria-metrics
 victoriametrics_cluster_vmstorage_http_listen_addr: "0.0.0.0:8482"
 victoriametrics_cluster_vmstorage_vminsert_addr: "0.0.0.0:8400"
 victoriametrics_cluster_vmstorage_vmselect_addr: "0.0.0.0:8401"
@@ -76,5 +76,7 @@ victoriametrics_vmalert: false
 victoriametrics_vmalert_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_vmalert_datasource_url: http://localhost:8428
 victoriametrics_vmalert_notifier_url: http://localhost:9093
+victoriametrics_vmalert_remotewrite_url: http://localhost:8428
+victoriametrics_vmalert_remoteread_url: http://localhost:8428
 victoriametrics_vmalert_args: {}
 victoriametrics_vmalert_envs: {}
