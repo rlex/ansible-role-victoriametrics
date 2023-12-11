@@ -1,13 +1,14 @@
-- name: create victoriametrics system group
-  group:
+---
+- name: Create victoriametrics system group
+  ansible.builtin.group:
     name: "{{ victoriametrics_user }}"
     system: true
     state: present
 
-- name: create victoriametrics system user
-  user:
+- name: Create victoriametrics system user
+  ansible.builtin.user:
     name: "{{ victoriametrics_user }}"
     system: true
-    shell: "/usr/sbin/nologin"
+    shell: /usr/sbin/nologin
     group: "{{ victoriametrics_user }}"
     createhome: false

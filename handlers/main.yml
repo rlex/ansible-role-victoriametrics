@@ -1,56 +1,56 @@
 # handlers file for VictoriaMetrics
 ---
-- name: restart vmselect
+- name: Restart vmselect
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vmselect
     state: restarted
     enabled: true
 
-- name: restart vminsert
+- name: Restart vminsert
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vminsert
     state: restarted
     enabled: true
 
-- name: restart vmstorage
+- name: Restart vmstorage
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vmstorage
     state: restarted
     enabled: true
 
-- name: restart victoriametrics
+- name: Restart victoriametrics
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: victoriametrics
     state: restarted
     enabled: true
 
-- name: restart vmauth
+- name: Restart vmauth
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vmauth
     state: restarted
     enabled: true
 
-- name: restart vmagent
+- name: Restart vmagent
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vmagent
     state: restarted
     enabled: true
 
-- name: restart vmalert
+- name: Restart vmalert
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: vmalert
     state: restarted

@@ -1,97 +1,99 @@
-- name: create victoriametrics vmstorage directory
-  file:
+---
+- name: Create victoriametrics vmstorage directory
+  ansible.builtin.file:
     path: "{{ victoriametrics_cluster_vmstorage_storage_data_path }}"
     state: directory
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
-  when: victoriametrics_cluster_vmselect
+  when: victoriametrics_cluster_vmstorage
 
-- name: "Download victoriametrics cluster files"
+- name: Download victoriametrics cluster files
   become: false
-  get_url:
-    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz"
-    dest: "/tmp/"
+  ansible.builtin.get_url:
+    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{
+      victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
+    dest: /tmp/
   delegate_to: localhost
 
-- name: "Create temporary directory"
+- name: Create temporary directory
   become: false
-  file:
+  ansible.builtin.file:
     path: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}
     state: directory
   delegate_to: localhost
 
-- name: "Unarchive victoriametrics cluster files"
+- name: Unarchive victoriametrics cluster files
   become: false
-  unarchive:
-    src: "/tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz"
-    remote_src: yes
-    dest: "/tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/"
-    creates: "/tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod"
+  ansible.builtin.unarchive:
+    src: /tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
+    remote_src: true
+    dest: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/
+    creates: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod
   delegate_to: localhost
   check_mode: false
 
-- name: propagate vminsert binary
-  copy:
-    src: "/tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vminsert-prod"
-    dest: "/usr/local/bin/vminsert"
-    mode: 0755
+- name: Propagate vminsert binary
+  ansible.builtin.copy:
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vminsert-prod
+    dest: /usr/local/bin/vminsert
+    mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
   when: victoriametrics_cluster_vminsert and victoriametrics_cluster_vminsert is defined
   notify:
-    - restart vminsert
+    - Restart vminsert
 
-- name: propagate vmselect binary
-  copy:
-    src: "/tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod"
-    dest: "/usr/local/bin/vmselect"
-    mode: 0755
+- name: Propagate vmselect binary
+  ansible.builtin.copy:
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod
+    dest: /usr/local/bin/vmselect
+    mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
   when: victoriametrics_cluster_vmselect and victoriametrics_cluster_vmselect is defined
   notify:
-    - restart vmselect
+    - Restart vmselect
 
-- name: propagate vmstorage binary
-  copy:
-    src: "/tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmstorage-prod"
-    dest: "/usr/local/bin/vmstorage"
-    mode: 0755
+- name: Propagate vmstorage binary
+  ansible.builtin.copy:
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmstorage-prod
+    dest: /usr/local/bin/vmstorage
+    mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
   when: victoriametrics_cluster_vmstorage and victoriametrics_cluster_vmstorage is defined
   notify:
-    - restart vmstorage
+    - Restart vmstorage
 
-- name: create vminsert systemd service unit
-  template:
+- name: Create vminsert systemd service unit
+  ansible.builtin.template:
     src: cluster/vminsert.service.j2
     dest: /etc/systemd/system/vminsert.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_cluster_vminsert and victoriametrics_cluster_vminsert is defined
   notify:
-    - restart vminsert
+    - Restart vminsert
 
-- name: create vmselect systemd service unit
-  template:
+- name: Create vmselect systemd service unit
+  ansible.builtin.template:
     src: cluster/vmselect.service.j2
     dest: /etc/systemd/system/vmselect.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_cluster_vmselect and victoriametrics_cluster_vmselect is defined
   notify:
-    - restart vmselect
+    - Restart vmselect
 
-- name: create vminsert systemd service unit
-  template:
+- name: Create vminsert systemd service unit
+  ansible.builtin.template:
     src: cluster/vmstorage.service.j2
     dest: /etc/systemd/system/vmstorage.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_cluster_vmstorage and victoriametrics_cluster_vmstorage is defined
   notify:
-    - restart vmstorage
+    - Restart vmstorage

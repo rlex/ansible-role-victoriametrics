@@ -1,8 +1,8 @@
-- import_tasks: user.yml
-- import_tasks: singlenode.yml
+---
+- ansible.builtin.import_tasks: user.yml
+- ansible.builtin.import_tasks: singlenode.yml
   when: victoriametrics_singlenode and victoriametrics_singlenode is defined
-- import_tasks: cluster.yml
+- ansible.builtin.import_tasks: cluster.yml
   when: victoriametrics_cluster and victoriametrics_cluster is defined
-- import_tasks: vmutils.yml
+- ansible.builtin.import_tasks: vmutils.yml
   when: victoriametrics_vmutils and victoriametrics_vmutils is defined
-
