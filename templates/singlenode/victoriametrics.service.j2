@@ -11,11 +11,10 @@ Group={{ victoriametrics_group }}
 Environment="httpListenAddr={{ victoriametrics_singlenode_http_listen_addr }}"
 Environment="retentionPeriod={{ victoriametrics_retention_period }}"
 Environment="storageDataPath={{ victoriametrics_storage_data_path }}"
-{% for name, value in victoriametrics_env %}
+{% for name, value in victoriametrics_envs %}
 Environment={{ name }}:{{ value }}
 {% endfor %}
-ExecStart=/usr/local/bin/victoriametrics \
-  -envflag.enable \
+ExecStart=/usr/local/bin/victoriametrics -envflag.enable \
 {% for flag, flag_value in victoriametrics_args.items() -%}
   -{{ flag }}={{ flag_value }} \
 {% endfor %}

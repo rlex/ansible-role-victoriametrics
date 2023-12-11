@@ -11,7 +11,7 @@ victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics/
 victoriametrics_args: {}
 victoriametrics_config_mode: "{{ victoriametrics_global_config_mode }}"
-victoriametrics_env: {}
+victoriametrics_envs: {}
 victoriametrics_singlenode_http_listen_addr: :8428
 
 ## VMUTILS

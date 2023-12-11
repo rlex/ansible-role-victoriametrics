@@ -7,6 +7,18 @@ After=network.target
 Type=simple
 User={{ victoriametrics_cluster_user }}
 Group={{ victoriametrics_cluster_group }}
+{% if victoriametrics_cluster_vminsert_config_mode == "env" %}
+Environment="storageNode={{ victoriametrics_cluster_vminsert_storage_node | join(',')}}"
+{% for name, value in victoriametrics_cluster_vminsert_envs %}
+Environment={{ name }}:{{ value }}
+{% endfor %}
+ExecStart=/usr/local/bin/vminsert -envflag.enable \
+{% for flag, flag_value in victoriametrics_cluster_vminsert_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor %}
+{% endif %}
+
+{% if victoriametrics_cluster_vminsert_config_mode == "args" %}
 ExecStart=/usr/local/bin/vminsert \
 {% for storage_node in victoriametrics_cluster_vminsert_storage_node %}
   -storageNode={{ storage_node }} \
@@ -15,6 +27,7 @@ ExecStart=/usr/local/bin/vminsert \
   -{{ flag }}={{ flag_value }} \
 {% endfor %}
   -httpListenAddr={{ victoriametrics_cluster_vminsert_http_listen_addr }}
+{% endif %}
 
 SyslogIdentifier=vminsert
 Restart=always

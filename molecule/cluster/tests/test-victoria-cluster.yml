@@ -1,12 +1,21 @@
 addr:
-  tcp://vmstorage:8482:
-    title: vmstorage port is reachable
+  tcp://vmstorage-1:8482:
+    title: vmstorage-1 port is reachable
     reachable: true
-  tcp://vmstorage:8400:
-    title: vmstorage for for vminsert is reachable
+  tcp://vmstorage-1:8400:
+    title: vmstorage-1 for for vminsert is reachable
     reachable: true
-  tcp://vmstorage:8401:
-    title: vmstorage port for vmselect is reachable
+  tcp://vmstorage-1:8401:
+    title: vmstorage-1 port for vmselect is reachable
+    reachable: true
+  tcp://vmstorage-2:8482:
+    title: vmstorage-2 port is reachable
+    reachable: true
+  tcp://vmstorage-2:8400:
+    title: vmstorage-2 for for vminsert is reachable
+    reachable: true
+  tcp://vmstorage-2:8401:
+    title: vmstorage-2 port for vmselect is reachable
     reachable: true
   tcp://vminsert:8480:
     title: vminsert is rechable

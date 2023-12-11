@@ -7,6 +7,23 @@ After=network.target
 Type=simple
 User={{ victoriametrics_cluster_user }}
 Group={{ victoriametrics_cluster_group }}
+
+{% if victoriametrics_cluster_vmstorage_config_mode == "env" %}
+Environment="httpListenAddr={{ victoriametrics_cluster_vmstorage_http_listen_addr }}"
+Environment="retentionPeriod={{ victoriametrics_cluster_vmstorage_retention_period }}"
+Environment="storageDataPath={{ victoriametrics_cluster_vmstorage_storage_data_path }}"
+Environment="vminsertAddr={{ victoriametrics_cluster_vmstorage_vminsert_addr }}"
+Environment="vmselectAddr={{ victoriametrics_cluster_vmstorage_vmselect_addr }}"
+{% for name, value in victoriametrics_cluster_vmstorage_envs %}
+Environment={{ name }}:{{ value }}
+{% endfor %}
+ExecStart=/usr/local/bin/vmstorage -envflag.enable \
+{% for flag, flag_value in victoriametrics_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor %}
+{% endif %}
+
+{% if victoriametrics_cluster_vmstorage_config_mode == "args" %}
 ExecStart=/usr/local/bin/vmstorage \
   -retentionPeriod={{ victoriametrics_cluster_vmstorage_retention_period }} \
   -storageDataPath={{ victoriametrics_cluster_vmstorage_storage_data_path }} \
@@ -16,6 +33,7 @@ ExecStart=/usr/local/bin/vmstorage \
 {% endfor %}
   -vminsertAddr={{ victoriametrics_cluster_vmstorage_vminsert_addr }} \
   -vmselectAddr={{ victoriametrics_cluster_vmstorage_vmselect_addr }}
+{% endif %}
 
 SyslogIdentifier=vmstorage
 Restart=always
