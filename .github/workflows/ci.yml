@@ -64,6 +64,8 @@ jobs:
             scenario: cluster
           - distro: ubuntu2204
             scenario: singlenode
+          - distro: ubuntu2204
+            scenario: cluster-with-utils
 
     steps:
       - name: Checkout codebase
