@@ -5,6 +5,7 @@
     url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch
       }}-v{{ victoriametrics_cluster_version }}.tar.gz
     dest: /tmp/
+    mode: "0755"
   delegate_to: localhost
 
 - name: Create temporary directory
@@ -12,6 +13,7 @@
   ansible.builtin.file:
     path: /tmp/vmutils_{{ victoriametrics_cluster_version }}
     state: directory
+    mode: "0755"
   delegate_to: localhost
 
 - name: Unarchive victoriametrics vmutils files
@@ -62,6 +64,7 @@
     state: directory
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
+    mode: "0755"
   when: victoriametrics_vmagent and victoriametrics_vmagent is defined
 
 - name: Create vmagent systemd service unit

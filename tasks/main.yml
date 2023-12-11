@@ -1,8 +1,12 @@
 ---
-- ansible.builtin.import_tasks: user.yml
-- ansible.builtin.import_tasks: singlenode.yml
+- name: Create victoriametrics user
+  ansible.builtin.import_tasks: user.yml
+- name: Install single-node victoriametrics
+  ansible.builtin.import_tasks: singlenode.yml
   when: victoriametrics_singlenode and victoriametrics_singlenode is defined
-- ansible.builtin.import_tasks: cluster.yml
+- name: Istall victoriametrics cluster
+  ansible.builtin.import_tasks: cluster.yml
   when: victoriametrics_cluster and victoriametrics_cluster is defined
-- ansible.builtin.import_tasks: vmutils.yml
+- name: Install victoriametrics vmutils
+  ansible.builtin.import_tasks: vmutils.yml
   when: victoriametrics_vmutils and victoriametrics_vmutils is defined

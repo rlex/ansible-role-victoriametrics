@@ -5,6 +5,7 @@
     state: directory
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
+    mode: "0755"
   when: victoriametrics_cluster_vmstorage
 
 - name: Download victoriametrics cluster files
@@ -13,6 +14,7 @@
     url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{
       victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
     dest: /tmp/
+    mode: "0755"
   delegate_to: localhost
 
 - name: Create temporary directory
@@ -20,6 +22,7 @@
   ansible.builtin.file:
     path: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}
     state: directory
+    mode: "0755"
   delegate_to: localhost
 
 - name: Unarchive victoriametrics cluster files
