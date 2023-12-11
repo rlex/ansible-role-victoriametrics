@@ -13,9 +13,10 @@ ExecStart=/usr/local/bin/vmstorage \
   -httpListenAddr={{ victoriametrics_cluster_vmstorage_http_listen_addr }} \
 {% for flag, flag_value in victoriametrics_cluster_vmstorage_args.items() -%}
   -{{ flag }}={{ flag_value }} \
-{% endfor -%}
+{% endfor %}
   -vminsertAddr={{ victoriametrics_cluster_vmstorage_vminsert_addr }} \
   -vmselectAddr={{ victoriametrics_cluster_vmstorage_vmselect_addr }}
+
 SyslogIdentifier=vmstorage
 Restart=always
 PrivateTmp=yes

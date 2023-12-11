@@ -7,15 +7,15 @@ After=network.target
 Type=simple
 User={{ victoriametrics_user }}
 Group={{ victoriametrics_group }}
-ExecStart=/usr/local/bin/victoria-metrics \
+ExecStart=/usr/local/bin/victoriametrics \
   -retentionPeriod={{ victoriametrics_retention_period }} \
   -storageDataPath={{ victoriametrics_storage_data_path }} \
 {% for flag, flag_value in victoriametrics_args.items() -%}
   -{{ flag }}={{ flag_value }} \
-{% endfor -%}
-  -httpListenAddr={{ victoriametrics_http_listen_addr }}
+{% endfor %}
+  -httpListenAddr={{ victoriametrics_singlenode_http_listen_addr }}
 
-SyslogIdentifier=vminsert
+SyslogIdentifier=victoriametrics
 Restart=always
 PrivateTmp=yes
 ProtectHome=yes

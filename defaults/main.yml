@@ -7,7 +7,7 @@ victoriametrics_version: 1.95.1
 victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics/
 victoriametrics_args: {}
-victoriametrics_http_listen_addr: 8428
+victoriametrics_singlenode_http_listen_addr: :8428
 victoriametrics_arch: amd64
 
 ## VMUTILS

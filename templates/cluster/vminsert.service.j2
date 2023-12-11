@@ -13,7 +13,7 @@ ExecStart=/usr/local/bin/vminsert \
 {% endfor %}
 {% for flag, flag_value in victoriametrics_cluster_vminsert_args.items() -%}
   -{{ flag }}={{ flag_value }} \
-{% endfor -%}
+{% endfor %}
   -httpListenAddr={{ victoriametrics_cluster_vminsert_http_listen_addr }}
 
 SyslogIdentifier=vminsert
