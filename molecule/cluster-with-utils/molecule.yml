@@ -1,0 +1,143 @@
+---
+role_name_check: 1
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: vmselect
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vmselect
+  - name: vminsert
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vminsert
+  - name: vmstorage
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vmstorage
+  - name: vmagent
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vmagent
+  - name: vmalert
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vmalert
+  - name: vmauth
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - victoria_vmauth
+provisioner:
+  name: ansible
+  options:
+    diff: true
+  inventory:
+    group_vars:
+      all:
+        victoriametrics_cluster: true
+        victoriametrics_vmutils: true
+        victoriametrics_arch: arm64
+        victoriametrics_version: 1.95.1
+        victoriametrics_cluster_vmstorage_retention_period: 1
+        victoriametrics_cluster_vminsert_storage_node:
+          - vmstorage:8400
+        victoriametrics_cluster_vmselect_storage_node:
+          - vmstorage:8401
+      victoria_vmselect:
+        victoriametrics_cluster_vmselect: true
+      victoria_vminsert:
+        victoriametrics_cluster_vminsert: true
+      victoria_vmstorage:
+        victoriametrics_cluster_vmstorage: true
+        victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/vmc
+      victoria_vmagent:
+        victoriametrics_vmagent: true
+        victoriametrics_vmagent_global:
+          scrape_interval: 15s
+          scrape_timeout: 10s
+        victoriametrics_vmagent_external_labels:
+          environment: production
+        victoriametrics_vmagent_remotewrite_url: http://vminsert:8480/insert/102/prometheus
+        victoriametrics_vmagent_remotewrite_tmpdatapath: /var/lib/vmagent/tmp
+        victoriametrics_vmagent_scrape_configs:
+          - job_name: "vmagent-pull"
+            metrics_path: /metrics
+            static_configs:
+              - targets:
+                  - localhost:8429
+      victoria_vmalert:
+        victoriametrics_vmalert: true
+        victoriametrics_vmalert_datasource_url: http://vmselect:8481/select/102/prometheus
+        victoriametrics_vmalert_remotewrite_url: http://vmagent:8429/api/v1/write
+        victoriametrics_vmalert_remoteread_url: http://vmselect:8428/select/102/prometheus
+        victoriametrics_vmalert_notifier_url: http://localhost:9093
+        victoriametrics_vmalert_alert_rules:
+          - alert: Instance down
+            expr: 'up == 0'
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: '{% raw %}Exporter down{% endraw %}'
+              description: '{% raw %}Prometheus node {{ $labels.instance }} is down{% endraw %}'
+      victoria_vmauth:
+        victoriametrics_vmauth: true
+        victoriametrics_vmauth_users:
+          - username: "cluster-select-account-123"
+            password: "password"
+            url_prefix: "http://vmselect:8481/select/123/prometheus"
+          - username: "cluster-insert-account-42"
+            password: "password"
+            url_prefix: "http://vminsert:8480/insert/42/prometheus"
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
