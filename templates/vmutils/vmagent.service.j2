@@ -11,7 +11,7 @@ ExecStart=/usr/local/bin/vmagent \
   -promscrape.config=/etc/vmagent.yml \
 {% for flag, flag_value in victoriametrics_vmagent_args.items() -%}
   -{{ flag }}={{ flag_value }} \
-{% endfor -%}
+{% endfor %}
   -remoteWrite.tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }} \
   -remoteWrite.url={{ victoriametrics_vmagent_remotewrite_url }}
 

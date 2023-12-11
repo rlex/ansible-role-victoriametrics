@@ -10,9 +10,15 @@ Group={{ victoriametrics_group }}
 ExecStart=/usr/local/bin/vmalert \
   -rule=/etc/vmalert.yml \
   -datasource.url={{ victoriametrics_vmalert_datasource_url }} \
+{% if victoriametrics_vmalert_remotewrite_url -%}
+  -remoteWrite.url={{ victoriametrics_vmalert_remotewrite_url }} \
+{% endif -%}
+{% if victoriametrics_vmalert_remoteread_url -%}
+  -remoteRead.url={{ victoriametrics_vmalert_remoteread_url }} \
+{% endif -%}
 {% for flag, flag_value in victoriametrics_vmalert_args.items() -%}
   -{{ flag }}={{ flag_value }} \
-{% endfor -%}
+{% endfor %}
   -notifier.url={{ victoriametrics_vmalert_notifier_url }}
 
 SyslogIdentifier=vmalert
