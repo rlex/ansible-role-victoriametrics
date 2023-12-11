@@ -102,6 +102,8 @@ provisioner:
         victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/vmc
       victoria_vmagent:
         victoriametrics_vmagent: true
+        victoriametrics_vmutils_files:
+          - vmagent
         victoriametrics_vmagent_global:
           scrape_interval: 15s
           scrape_timeout: 10s
@@ -117,6 +119,8 @@ provisioner:
                   - localhost:8429
       victoria_vmalert:
         victoriametrics_vmalert: true
+        victoriametrics_vmutils_files:
+          - vmalert
         victoriametrics_vmalert_datasource_url: http://vmselect:8481/select/102/prometheus
         victoriametrics_vmalert_remotewrite_url: http://vmagent:8429/api/v1/write
         victoriametrics_vmalert_remoteread_url: http://vmselect:8428/select/102/prometheus
@@ -132,6 +136,8 @@ provisioner:
               description: '{% raw %}Prometheus node {{ $labels.instance }} is down{% endraw %}'
       victoria_vmauth:
         victoriametrics_vmauth: true
+        victoriametrics_vmutils_files:
+          - vmauth
         victoriametrics_vmauth_users:
           - username: "cluster-select-account-123"
             password: "password"

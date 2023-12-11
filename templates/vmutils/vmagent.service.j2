@@ -7,6 +7,20 @@ After=network.target
 Type=simple
 User={{ victoriametrics_user }}
 Group={{ victoriametrics_group }}
+{% if victoriametrics_vmagent_config_mode == "env" %}
+Environment="promscrape_config=/etc/vmagent.yml"
+Environment="remoteWrite_tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }}"
+Environment="remoteWrite_url={{ victoriametrics_vmagent_remotewrite_url }}"
+{% for name, value in victoriametrics_vmagent_envs %}
+Environment={{ name }}:{{ value }}
+{% endfor %}
+ExecStart=/usr/local/bin/vmagent -envflag.enable \
+{% for flag, flag_value in victoriametrics_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor %}
+{% endif %}
+
+{% if victoriametrics_vmagent_config_mode == "args" %}
 ExecStart=/usr/local/bin/vmagent \
   -promscrape.config=/etc/vmagent.yml \
 {% for flag, flag_value in victoriametrics_vmagent_args.items() -%}
@@ -14,6 +28,7 @@ ExecStart=/usr/local/bin/vmagent \
 {% endfor %}
   -remoteWrite.tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }} \
   -remoteWrite.url={{ victoriametrics_vmagent_remotewrite_url }}
+{% endif %}
 
 SyslogIdentifier=vmagent
 Restart=always
