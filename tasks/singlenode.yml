@@ -19,7 +19,7 @@
 - name: Create temporary directory
   become: false
   ansible.builtin.file:
-    path: /tmp/victoriametrics_{{ victoriametrics_version }}
+    path: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}
     state: directory
     mode: "0755"
   delegate_to: localhost
@@ -29,14 +29,14 @@
   ansible.builtin.unarchive:
     src: /tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz
     remote_src: true
-    dest: /tmp/victoriametrics_{{ victoriametrics_version }}/
-    creates: /tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod
+    dest: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}/
+    creates: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}/victoria-metrics-prod
   delegate_to: localhost
   check_mode: false
 
 - name: Propagate victoriametrics binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod
+    src: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}/victoria-metrics-prod
     dest: /usr/local/bin/victoriametrics
     mode: "0755"
     owner: "{{ victoriametrics_user }}"

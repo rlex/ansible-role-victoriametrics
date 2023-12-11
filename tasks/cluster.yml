@@ -20,7 +20,7 @@
 - name: Create temporary directory
   become: false
   ansible.builtin.file:
-    path: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}
+    path: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}
     state: directory
     mode: "0755"
   delegate_to: localhost
@@ -30,14 +30,14 @@
   ansible.builtin.unarchive:
     src: /tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
     remote_src: true
-    dest: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/
-    creates: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod
+    dest: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/
+    creates: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmselect-prod
   delegate_to: localhost
   check_mode: false
 
 - name: Propagate vminsert binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vminsert-prod
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vminsert-prod
     dest: /usr/local/bin/vminsert
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
@@ -48,7 +48,7 @@
 
 - name: Propagate vmselect binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmselect-prod
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmselect-prod
     dest: /usr/local/bin/vmselect
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
@@ -59,7 +59,7 @@
 
 - name: Propagate vmstorage binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}/vmstorage-prod
+    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmstorage-prod
     dest: /usr/local/bin/vmstorage
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"

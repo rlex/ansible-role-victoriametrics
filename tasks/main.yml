@@ -1,4 +1,7 @@
 ---
+- name: Decide architecture
+  ansible.builtin.set_fact:
+    victoriametrics_arch: "{{ victoriametrics_arch_table[ansible_architecture].arch }}"
 - name: Create victoriametrics user
   ansible.builtin.import_tasks: user.yml
 - name: Install single-node victoriametrics
