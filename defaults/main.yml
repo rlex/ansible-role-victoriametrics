@@ -34,22 +34,28 @@ victoriametrics_cluster_group: "{{ victoriametrics_cluster_user }}"
 victoriametrics_cluster_version: "{{ victoriametrics_version }}"
 
 # CLUSTER-VMSTORAGE
+victoriametrics_cluster_vmstorage_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_cluster_vmstorage_retention_period: 3
 victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/victoria-metrics/
 victoriametrics_cluster_vmstorage_http_listen_addr: "0.0.0.0:8482"
 victoriametrics_cluster_vmstorage_vminsert_addr: "0.0.0.0:8400"
 victoriametrics_cluster_vmstorage_vmselect_addr: "0.0.0.0:8401"
 victoriametrics_cluster_vmstorage_args: {}
+victoriametrics_cluster_vmstorage_envs: {}
 # CLUSTER-VMINSERT
+victoriametrics_cluster_vminsert_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_cluster_vminsert_http_listen_addr: "0.0.0.0:8480"
 victoriametrics_cluster_vminsert_storage_node:
   - localhost:8400
 victoriametrics_cluster_vminsert_args: {}
+victoriametrics_cluster_vminsert_envs: {}
 # CLUSTER-VMSELECT
+victoriametrics_cluster_vmselect_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_cluster_vmselect_http_listen_addr: "0.0.0.0:8481"
 victoriametrics_cluster_vmselect_storage_node:
   - localhost:8401
 victoriametrics_cluster_vmselect_args: {}
+victoriametrics_cluster_vmselect_envs: {}
 # VMUTILS-VMAUTH
 victoriametrics_vmauth: false
 victoriametrics_vmauth_users: {}
