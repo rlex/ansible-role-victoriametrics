@@ -1,0 +1,22 @@
+port:
+  tcp:8482:
+    title: vmstorage port is up
+    listening: true
+
+  tcp:8400:
+    title: vmstorage port is up
+    listening: true
+
+  tcp:8401:
+    title: vmstorage port is up
+    listening: true
+
+  tcp:8480:
+    title: vminsert is up
+    listening: true
+
+  tcp:8481:
+    title: vmselect is up
+    listening: true
+
+
