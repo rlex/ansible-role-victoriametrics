@@ -1,20 +1,16 @@
 addr:
-  vmstorage:8482:
+  tcp://vmstorage:8482:
     title: vmstorage port is reachable
-    listening: true
-
-  vmstorage:8400:
+    reachable: true
+  tcp://vmstorage:8400:
     title: vmstorage for for vminsert is reachable
-    listening: true
-
-  vmstorage:8401:
+    reachable: true
+  tcp://vmstorage:8401:
     title: vmstorage port for vmselect is reachable
-    listening: true
-
-  vminsert:8480:
+    reachable: true
+  tcp://vminsert:8480:
     title: vminsert is rechable
-    listening: true
-
-  vmselect:8481:
+    reachable: true
+  tcp://vmselect:8481:
     title: vmselect is reachable
-    listening: true
+    reachable: true
