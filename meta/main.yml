@@ -1,0 +1,31 @@
+---
+galaxy_info:
+  role_name: victoriametrics
+  namespace: rlex
+  author: Lex Rivera
+  description: ansible role for managing zot contaner registry
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: CentOS
+      versions: 
+        - all
+      
+
+  galaxy_tags:
+    - prometheus
+    - metrics
+    - victoriametrics
+    - observability
+    - openmetrics
+    - influxdb
+    - opentsdb
+    - statsd
+
+dependencies: []
