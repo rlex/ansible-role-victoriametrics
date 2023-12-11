@@ -5,7 +5,7 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: vmselect
+  - name: victoriametrics
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -20,7 +20,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        victoriametrics_singlenode: false
+        victoriametrics_singlenode: true
         victoriametrics_singlenode_http_listen_addr: 0.0.0.0:8428
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
