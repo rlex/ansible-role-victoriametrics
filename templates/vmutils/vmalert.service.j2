@@ -7,6 +7,23 @@ After=network.target
 Type=simple
 User={{ victoriametrics_user }}
 Group={{ victoriametrics_group }}
+
+{% if victoriametrics_vmalert_config_mode == "env" %}
+Environment="rule=/etc/vmalert.yml"
+Environment="datasource_url={{ victoriametrics_vmalert_datasource_url }}"
+Environment="notifier_url={{ victoriametrics_vmalert_notifier_url }}"
+Environment="remoteWrite_url={{ victoriametrics_vmalert_remotewrite_url }}"
+Environment="remoteRead_url={{ victoriametrics_vmalert_remoteread_url }}"
+{% for name, value in victoriametrics_vmalert_envs %}
+Environment={{ name }}:{{ value }}
+{% endfor %}
+ExecStart=/usr/local/bin/vmalert -envflag.enable \
+{% for flag, flag_value in victoriametrics_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor %}
+{% endif %}
+
+{% if victoriametrics_vmalert_config_mode == "args" %}
 ExecStart=/usr/local/bin/vmalert \
   -rule=/etc/vmalert.yml \
   -datasource.url={{ victoriametrics_vmalert_datasource_url }} \
@@ -20,6 +37,7 @@ ExecStart=/usr/local/bin/vmalert \
   -{{ flag }}={{ flag_value }} \
 {% endfor %}
   -notifier.url={{ victoriametrics_vmalert_notifier_url }}
+{% endif %}
 
 SyslogIdentifier=vmalert
 Restart=always

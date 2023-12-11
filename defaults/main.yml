@@ -58,17 +58,23 @@ victoriametrics_cluster_vmselect_args: {}
 victoriametrics_cluster_vmselect_envs: {}
 # VMUTILS-VMAUTH
 victoriametrics_vmauth: false
+victoriametrics_vmauth_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_vmauth_users: {}
 victoriametrics_vmauth_args: {}
+victoriametrics_vmauth_envs: {}
 # VMUTILS-VMAGENT
 victoriametrics_vmagent: false
+victoriametrics_vmagent_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_vmagent_global: {}
 victoriametrics_vmagent_scrape_configs: {}
 victoriametrics_vmagent_remotewrite_url: {}
 victoriametrics_vmagent_remotewrite_tmpdatapath: /var/lib/vmagent/tmp
 victoriametrics_vmagent_args: {}
+victoriametrics_vmagent_envs: {}
 # VMUTILS-VMALERT
 victoriametrics_vmalert: false
+victoriametrics_vmalert_config_mode: "{{ victoriametrics_global_config_mode }}"
 victoriametrics_vmalert_datasource_url: http://localhost:8428
 victoriametrics_vmalert_notifier_url: http://localhost:9093
 victoriametrics_vmalert_args: {}
+victoriametrics_vmalert_envs: {}
