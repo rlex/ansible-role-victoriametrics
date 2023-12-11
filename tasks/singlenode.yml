@@ -1,50 +1,55 @@
-- name: create victoriametrics storage directory
-  file:
+---
+- name: Create victoriametrics storage directory
+  ansible.builtin.file:
     path: "{{ victoriametrics_storage_data_path }}"
     state: directory
     owner: "{{ victoriametrics_user }}"
     group: "{{ victoriametrics_user }}"
+    mode: "0755"
 
-- name: "Download victoriametrics files"
+- name: Download victoriametrics files
   become: false
-  get_url:
-    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
-    dest: "/tmp/"
+  ansible.builtin.get_url:
+    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{
+      victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    dest: /tmp/
+    mode: "0755"
   delegate_to: localhost
 
-- name: "Create temporary directory"
+- name: Create temporary directory
   become: false
-  file:
+  ansible.builtin.file:
     path: /tmp/victoriametrics_{{ victoriametrics_version }}
     state: directory
+    mode: "0755"
   delegate_to: localhost
 
-- name: "Unarchive victoriametrics files"
+- name: Unarchive victoriametrics files
   become: false
-  unarchive:
-    src: "/tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz"
-    remote_src: yes
-    dest: "/tmp/victoriametrics_{{ victoriametrics_version }}/"
-    creates: "/tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod"
+  ansible.builtin.unarchive:
+    src: /tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz
+    remote_src: true
+    dest: /tmp/victoriametrics_{{ victoriametrics_version }}/
+    creates: /tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod
   delegate_to: localhost
   check_mode: false
 
-- name: propagate victoriametrics binary
-  copy:
-    src: "/tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod"
-    dest: "/usr/local/bin/victoriametrics"
-    mode: 0755
+- name: Propagate victoriametrics binary
+  ansible.builtin.copy:
+    src: /tmp/victoriametrics_{{ victoriametrics_version }}/victoria-metrics-prod
+    dest: /usr/local/bin/victoriametrics
+    mode: "0755"
     owner: "{{ victoriametrics_user }}"
     group: "{{ victoriametrics_user }}"
   notify:
-    - restart victoriametrics
+    - Restart victoriametrics
 
-- name: create victoriametrics systemd service unit
-  template:
+- name: Create victoriametrics systemd service unit
+  ansible.builtin.template:
     src: singlenode/victoriametrics.service.j2
     dest: /etc/systemd/system/victoriametrics.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify:
-    - restart victoriametrics
+    - Restart victoriametrics

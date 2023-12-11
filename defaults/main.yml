@@ -1,3 +1,4 @@
+---
 ## SINGLE-NODE
 victoriametrics_singlenode: false
 victoriametrics_user: victoriametrics
@@ -6,7 +7,7 @@ victoriametrics_version: 1.95.1
 victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics/
 victoriametrics_args: {}
-victoriametrics_http_listen_addr: 8428
+victoriametrics_singlenode_http_listen_addr: :8428
 victoriametrics_arch: amd64
 
 ## VMUTILS
@@ -21,6 +22,9 @@ victoriametrics_vmutils_files:
 
 ## CLUSTER
 victoriametrics_cluster: false
+victoriametrics_cluster_vminsert: false
+victoriametrics_cluster_vmselect: false
+victoriametrics_cluster_vmstorage: false
 victoriametrics_cluster_user: "{{ victoriametrics_user }}"
 victoriametrics_cluster_group: "{{ victoriametrics_cluster_user }}"
 victoriametrics_cluster_version: "{{ victoriametrics_version }}"
@@ -28,28 +32,24 @@ victoriametrics_cluster_version: "{{ victoriametrics_version }}"
 # CLUSTER-VMSTORAGE
 victoriametrics_cluster_vmstorage_retention_period: 3
 victoriametrics_cluster_vmstorage_storage_data_path: /var/lib/victoria-metrics/
-victoriametrics_cluster_vmstorage_http_listen_addr: 0.0.0.0:8482
-victoriametrics_cluster_vmstorage_vminsert_addr: 0.0.0.0:8400
-victoriametrics_cluster_vmstorage_vmselect_addr: 0.0.0.0:8401
+victoriametrics_cluster_vmstorage_http_listen_addr: "0.0.0.0:8482"
+victoriametrics_cluster_vmstorage_vminsert_addr: "0.0.0.0:8400"
+victoriametrics_cluster_vmstorage_vmselect_addr: "0.0.0.0:8401"
 victoriametrics_cluster_vmstorage_args: {}
-
 # CLUSTER-VMINSERT
-victoriametrics_cluster_vminsert_http_listen_addr: 0.0.0.0:8480
+victoriametrics_cluster_vminsert_http_listen_addr: "0.0.0.0:8480"
 victoriametrics_cluster_vminsert_storage_node:
   - localhost:8400
 victoriametrics_cluster_vminsert_args: {}
-
 # CLUSTER-VMSELECT
-victoriametrics_cluster_vmselect_http_listen_addr: 0.0.0.0:8481
+victoriametrics_cluster_vmselect_http_listen_addr: "0.0.0.0:8481"
 victoriametrics_cluster_vmselect_storage_node:
   - localhost:8401
 victoriametrics_cluster_vmselect_args: {}
-
 # VMUTILS-VMAUTH
 victoriametrics_vmauth: false
 victoriametrics_vmauth_users: {}
 victoriametrics_vmauth_args: {}
-
 # VMUTILS-VMAGENT
 victoriametrics_vmagent: false
 victoriametrics_vmagent_global: {}
@@ -57,7 +57,6 @@ victoriametrics_vmagent_scrape_configs: {}
 victoriametrics_vmagent_remotewrite_url: {}
 victoriametrics_vmagent_remotewrite_tmpdatapath: /var/lib/vmagent/tmp
 victoriametrics_vmagent_args: {}
-
 # VMUTILS-VMALERT
 victoriametrics_vmalert: false
 victoriametrics_vmalert_datasource_url: http://localhost:8428

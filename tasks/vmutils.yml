@@ -1,107 +1,112 @@
-- name: "Download victoriametrics vmutils files"
+---
+- name: Download victoriametrics vmutils files
   become: false
-  get_url:
-    url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
-    dest: "/tmp/"
+  ansible.builtin.get_url:
+    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch
+      }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    dest: /tmp/
+    mode: "0755"
   delegate_to: localhost
 
-- name: "Create temporary directory"
+- name: Create temporary directory
   become: false
-  file:
+  ansible.builtin.file:
     path: /tmp/vmutils_{{ victoriametrics_cluster_version }}
     state: directory
+    mode: "0755"
   delegate_to: localhost
 
-- name: "Unarchive victoriametrics vmutils files"
+- name: Unarchive victoriametrics vmutils files
   become: false
-  unarchive:
-    src: "/tmp/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz"
-    remote_src: yes
-    dest: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/"
-    creates: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod"
+  ansible.builtin.unarchive:
+    src: /tmp/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    remote_src: true
+    dest: /tmp/vmutils_{{ victoriametrics_cluster_version }}/
+    creates: /tmp/vmutils_{{ victoriametrics_cluster_version }}/vmbackup-prod
   delegate_to: localhost
   check_mode: false
 
-- name: propagate vmutils binaries
-  copy:
-    src: "/tmp/vmutils_{{ victoriametrics_cluster_version }}/{{ item }}-prod"
-    dest: "/usr/local/bin/{{ item }}"
-    mode: 0755
+- name: Propagate vmutils binaries
+  ansible.builtin.copy:
+    src: /tmp/vmutils_{{ victoriametrics_cluster_version }}/{{ item }}-prod
+    dest: /usr/local/bin/{{ item }}
+    mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
   loop: "{{ victoriametrics_vmutils_files }}"
 
-- name: create vmauth systemd service unit
-  template:
+- name: Create vmauth systemd service unit
+  ansible.builtin.template:
     src: vmutils/vmauth.service.j2
     dest: /etc/systemd/system/vmauth.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmauth and victoriametrics_vmauth is defined
   notify:
-    - restart vmauth
+    - Restart vmauth
 
-- name: configure vmauth
-  template:
+- name: Configure vmauth
+  ansible.builtin.template:
     src: vmutils/vmauth.yml.j2
     dest: /etc/vmauth.yml
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmauth and victoriametrics_vmauth is defined
   notify:
-    - restart vmauth
+    - Restart vmauth
 
-- name: "Create temporary directory for vmagent"
+- name: Create temporary directory for vmagent
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ victoriametrics_vmagent_remotewrite_tmpdatapath }}"
     state: directory
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
+    mode: "0755"
   when: victoriametrics_vmagent and victoriametrics_vmagent is defined
 
-- name: create vmagent systemd service unit
-  template:
+- name: Create vmagent systemd service unit
+  ansible.builtin.template:
     src: vmutils/vmagent.service.j2
     dest: /etc/systemd/system/vmagent.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmagent and victoriametrics_vmagent is defined
   notify:
-    - restart vmagent
+    - Restart vmagent
 
-- name: configure vmagent
-  template:
+- name: Configure vmagent
+  ansible.builtin.template:
     src: vmutils/vmagent.yml.j2
     dest: /etc/vmagent.yml
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmagent and victoriametrics_vmagent is defined
   notify:
-    - restart vmagent
+    - Restart vmagent
 
-- name: create vmalert systemd service unit
-  template:
+- name: Create vmalert systemd service unit
+  ansible.builtin.template:
     src: vmutils/vmalert.service.j2
     dest: /etc/systemd/system/vmalert.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmalert and victoriametrics_vmalert is defined
   notify:
-    - restart vmalert
+    - Restart vmalert
 
-- name: configure vmalert
-  template:
+- name: Configure vmalert
+  ansible.builtin.template:
     src: vmutils/vmalert.yml.j2
     dest: /etc/vmalert.yml
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   when: victoriametrics_vmalert and victoriametrics_vmalert is defined
   notify:
-    - restart vmalert
+    - Restart vmalert
