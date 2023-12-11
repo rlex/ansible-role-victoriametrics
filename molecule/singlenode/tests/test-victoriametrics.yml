@@ -1,0 +1,4 @@
+addr:
+  vmstorage:8428:
+    title: victoriametrics port is up
+    listening: true

@@ -1,22 +1,20 @@
-port:
-  tcp:8482:
-    title: vmstorage port is up
+addr:
+  vmstorage:8482:
+    title: vmstorage port is reachable
     listening: true
 
-  tcp:8400:
-    title: vmstorage port is up
+  vmstorage:8400:
+    title: vmstorage for for vminsert is reachable
     listening: true
 
-  tcp:8401:
-    title: vmstorage port is up
+  vmstorage:8401:
+    title: vmstorage port for vmselect is reachable
     listening: true
 
-  tcp:8480:
-    title: vminsert is up
+  vminsert:8480:
+    title: vminsert is rechable
     listening: true
 
-  tcp:8481:
-    title: vmselect is up
+  vmselect:8481:
+    title: vmselect is reachable
     listening: true
-
-
