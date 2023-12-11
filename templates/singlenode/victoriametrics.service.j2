@@ -7,6 +7,21 @@ After=network.target
 Type=simple
 User={{ victoriametrics_user }}
 Group={{ victoriametrics_group }}
+{% if victoriametrics_config_mode == "env" %}
+Environment="httpListenAddr={{ victoriametrics_singlenode_http_listen_addr }}"
+Environment="retentionPeriod={{ victoriametrics_retention_period }}"
+Environment="storageDataPath={{ victoriametrics_storage_data_path }}"
+{% for name, value in victoriametrics_env %}
+Environment={{ name }}:{{ value }}
+{% endfor %}
+ExecStart=/usr/local/bin/victoriametrics \
+  -envflag.enable \
+{% for flag, flag_value in victoriametrics_args.items() -%}
+  -{{ flag }}={{ flag_value }} \
+{% endfor %}
+{% endif %}
+
+{% if victoriametrics_config_mode == "args" %}
 ExecStart=/usr/local/bin/victoriametrics \
   -retentionPeriod={{ victoriametrics_retention_period }} \
   -storageDataPath={{ victoriametrics_storage_data_path }} \
@@ -14,6 +29,7 @@ ExecStart=/usr/local/bin/victoriametrics \
   -{{ flag }}={{ flag_value }} \
 {% endfor %}
   -httpListenAddr={{ victoriametrics_singlenode_http_listen_addr }}
+{% endif %}
 
 SyslogIdentifier=victoriametrics
 Restart=always
