@@ -14,8 +14,8 @@ Environment="datasource_url={{ victoriametrics_vmalert_datasource_url }}"
 Environment="notifier_url={{ victoriametrics_vmalert_notifier_url }}"
 Environment="remoteWrite_url={{ victoriametrics_vmalert_remotewrite_url }}"
 Environment="remoteRead_url={{ victoriametrics_vmalert_remoteread_url }}"
-{% for name, value in victoriametrics_vmalert_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_vmalert_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmalert -envflag.enable \
 {% for flag, flag_value in victoriametrics_args.items() -%}

@@ -11,8 +11,8 @@ Group={{ victoriametrics_group }}
 Environment="promscrape_config=/etc/vmagent.yml"
 Environment="remoteWrite_tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }}"
 Environment="remoteWrite_url={{ victoriametrics_vmagent_remotewrite_url }}"
-{% for name, value in victoriametrics_vmagent_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_vmagent_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmagent -envflag.enable \
 {% for flag, flag_value in victoriametrics_args.items() -%}

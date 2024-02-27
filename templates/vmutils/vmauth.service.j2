@@ -10,8 +10,8 @@ Group={{ victoriametrics_group }}
 
 {% if victoriametrics_vmauth_config_mode == "env" %}
 Environment="auth_config=/etc/vmauth.yml"
-{% for name, value in victoriametrics_vmauth_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_vmauth_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmauth -envflag.enable \
 {% for flag, flag_value in victoriametrics_args.items() -%}
