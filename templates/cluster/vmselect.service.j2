@@ -10,8 +10,8 @@ Group={{ victoriametrics_cluster_group }}
 
 {% if victoriametrics_cluster_vmselect_config_mode == "env" %}
 Environment="storageNode={{ victoriametrics_cluster_vmselect_storage_node | join(',')}}"
-{% for name, value in victoriametrics_cluster_vmselect_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_cluster_vmselect_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmselect -envflag.enable \
 {% for flag, flag_value in victoriametrics_cluster_vmselect_args.items() -%}

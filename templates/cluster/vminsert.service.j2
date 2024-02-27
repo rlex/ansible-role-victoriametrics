@@ -7,10 +7,11 @@ After=network.target
 Type=simple
 User={{ victoriametrics_cluster_user }}
 Group={{ victoriametrics_cluster_group }}
+
 {% if victoriametrics_cluster_vminsert_config_mode == "env" %}
 Environment="storageNode={{ victoriametrics_cluster_vminsert_storage_node | join(',')}}"
-{% for name, value in victoriametrics_cluster_vminsert_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_cluster_vminsert_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vminsert -envflag.enable \
 {% for flag, flag_value in victoriametrics_cluster_vminsert_args.items() -%}

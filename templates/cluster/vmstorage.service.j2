@@ -14,8 +14,8 @@ Environment="retentionPeriod={{ victoriametrics_cluster_vmstorage_retention_peri
 Environment="storageDataPath={{ victoriametrics_cluster_vmstorage_storage_data_path }}"
 Environment="vminsertAddr={{ victoriametrics_cluster_vmstorage_vminsert_addr }}"
 Environment="vmselectAddr={{ victoriametrics_cluster_vmstorage_vmselect_addr }}"
-{% for name, value in victoriametrics_cluster_vmstorage_envs %}
-Environment={{ name }}:{{ value }}
+{% for env, env_value in victoriametrics_cluster_vmstorage_envs.items() %}
+Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmstorage -envflag.enable \
 {% for flag, flag_value in victoriametrics_args.items() -%}
