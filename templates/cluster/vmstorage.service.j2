@@ -18,7 +18,7 @@ Environment="vmselectAddr={{ victoriametrics_cluster_vmstorage_vmselect_addr }}"
 Environment="{{ env }}={{ env_value }}"
 {% endfor %}
 ExecStart=/usr/local/bin/vmstorage -envflag.enable \
-{% for flag, flag_value in victoriametrics_args.items() -%}
+{% for flag, flag_value in victoriametrics_cluster_vmstorage_args.items() -%}
   -{{ flag }}={{ flag_value }} \
 {% endfor %}
 {% endif %}
