@@ -11,6 +11,9 @@ Group={{ victoriametrics_group }}
 Environment="promscrape_config=/etc/vmagent.yml"
 Environment="remoteWrite_tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }}"
 Environment="remoteWrite_url={{ victoriametrics_vmagent_remotewrite_url }}"
+{% if victoriametrics_vmagent_remotewrite_relabel_config_files is defined and victoriametrics_vmagent_remotewrite_relabel_config_files | length > 0 %}
+Environment="remoteWrite_urlRelabelConfig={{ victoriametrics_vmagent_remotewrite_relabel_config_files | map(attribute='name') | join(',') }}"
+{% endif %}
 {% for env, env_value in victoriametrics_vmagent_envs.items() %}
 Environment="{{ env }}={{ env_value }}"
 {% endfor %}
@@ -27,6 +30,9 @@ ExecStart=/usr/local/bin/vmagent \
   -{{ flag }}={{ flag_value }} \
 {% endfor %}
   -remoteWrite.tmpDataPath={{ victoriametrics_vmagent_remotewrite_tmpdatapath }} \
+{% if victoriametrics_vmagent_remotewrite_relabel_config_files is defined and victoriametrics_vmagent_remotewrite_relabel_config_files | length > 0 %}
+  -remoteWrite.urlRelabelConfig={{ victoriametrics_vmagent_remotewrite_relabel_config_files | map(attribute='name') | join(',') }}" \
+{% endif %}
   -remoteWrite.url={{ victoriametrics_vmagent_remotewrite_url }}
 {% endif %}
 
