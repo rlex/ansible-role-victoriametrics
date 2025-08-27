@@ -195,16 +195,17 @@ victoriametrics_vmauth_users:
 ## vmagent
 
 vmagent-related variables:
-| Variable name                                   | Default value                        | Description                                         |
-| ----------------------------------------------- | ------------------------------------ | --------------------------------------------------- |
-| victoriametrics_vmagent                         | `false`                              | enables vmagent if set to true                      |
-| victoriametrics_vmagent_global                  | `{}`                                 | YAML with vmagent global settings                   |
-| victoriametrics_vmagent_external_labels         | `{}`                                 | YAML with vmagent external labels                   |
-| victoriametrics_vmagent_remotewrite_url         | `http://localhost:8428/api/v1/write` | URL to victoriametrics instance for writing         |
-| victoriametrics_vmagent_remotewrite_tmpdatapath | `{}`                                 | Folder to keep metrics if remotewrite_url is down   |
-| victoriametrics_vmagent_scrape_configs          | `{}`                                 | YAML with prometheus scrape_configs                 |
-| victoriametrics_vmagent_args                    | `{}`                                 | additional arguments to pass to vmagent             |
-| victoriametrics_vmagent_envs                    | `{}`                                 | additional environment variables to pass to vmagent |
+| Variable name                                            | Default value                        | Description                                         |
+| ---------------------------------------------------------| ------------------------------------ | --------------------------------------------------- |
+| victoriametrics_vmagent                                  | `false`                              | enables vmagent if set to true                      |
+| victoriametrics_vmagent_global                           | `{}`                                 | YAML with vmagent global settings                   |
+| victoriametrics_vmagent_external_labels                  | `{}`                                 | YAML with vmagent external labels                   |
+| victoriametrics_vmagent_remotewrite_url                  | `http://localhost:8428/api/v1/write` | URL to victoriametrics instance for writing         |
+| victoriametrics_vmagent_remotewrite_tmpdatapath          | `{}`                                 | Folder to keep metrics if remotewrite_url is down   |
+| victoriametrics_vmagent_remotewrite_relabel_config_files | `[]`                                 | Array of relabel config files for remote write      |
+| victoriametrics_vmagent_scrape_configs                   | `{}`                                 | YAML with prometheus scrape_configs                 |
+| victoriametrics_vmagent_args                             | `{}`                                 | additional arguments to pass to vmagent             |
+| victoriametrics_vmagent_envs                             | `{}`                                 | additional environment variables to pass to vmagent |
 
 Sample config, adding prometheus label environment=production, setting tmp folder to /var/lib/vmagent/tmp (folder will be created by role with proper permissions), and adding single scrape job from localhost:
 ```yaml
@@ -225,6 +226,16 @@ victoriametrics_vmagent_scrape_configs:
     static_configs:
       - targets:
         - localhost:8429
+```
+
+You can also configure relabel configs for remote write using `victoriametrics_vmagent_remotewrite_relabel_config_files`. Each item in the array should have a `name` (file path) and `config` (YAML content):
+```yaml
+victoriametrics_vmagent_remotewrite_relabel_config_files:
+  - name: /etc/vmagent/remotewrite-relabel.yml
+    config:
+      - source_labels: [__name__]
+        regex: 'up'
+        action: drop
 ```
 
 ## vmalert 

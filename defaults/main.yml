@@ -69,6 +69,7 @@ victoriametrics_vmagent_global: {}
 victoriametrics_vmagent_scrape_configs: {}
 victoriametrics_vmagent_remotewrite_url: {}
 victoriametrics_vmagent_remotewrite_tmpdatapath: /var/lib/vmagent/tmp
+victoriametrics_vmagent_remotewrite_relabel_config_files: []
 victoriametrics_vmagent_args: {}
 victoriametrics_vmagent_envs: {}
 # VMUTILS-VMALERT

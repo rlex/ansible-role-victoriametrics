@@ -67,6 +67,23 @@
     mode: "0755"
   when: victoriametrics_vmagent and victoriametrics_vmagent is defined
 
+- name: Create vmagent remote write relabel config files
+  ansible.builtin.copy:
+    dest: "{{ item.name }}"
+    content: |-
+      {% if item.config | length == 0 %}
+      ---
+      {% else %}
+      {{ item.config | to_nice_yaml(indent=2) }}
+      {% endif %}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ victoriametrics_vmagent_remotewrite_relabel_config_files }}"
+  when: victoriametrics_vmagent_remotewrite_relabel_config_files | length != 0 and victoriametrics_vmagent_remotewrite_relabel_config_files is defined
+  notify:
+    - Restart vmagent
+
 - name: Create vmagent systemd service unit
   ansible.builtin.template:
     src: vmutils/vmagent.service.j2
