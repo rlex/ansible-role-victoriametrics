@@ -1,2 +1,9 @@
+{% if victoriametrics_vmauth_users is defined and victoriametrics_vmauth_users %}
 users:
   {{ victoriametrics_vmauth_users | to_nice_yaml(indent=2) | indent(2,False) }}
+{% endif %}
+
+{% if victoriametrics_vmauth_unauthorized_user is defined and victoriametrics_vmauth_unauthorized_user %}
+unauthorized_user:
+  {{ victoriametrics_vmauth_unauthorized_user | to_nice_yaml(indent=2) | indent(2,False) }}
+{% endif %}
