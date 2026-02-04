@@ -171,11 +171,12 @@ victoriametrics_vmutils_files:
 ## vmauth
 
 vmauth-related variables:
-| Variable name                | Default value | Description                             |
-| ---------------------------- | ------------- | --------------------------------------- |
-| victoriametrics_vmauth       | `false`       | enables vmauth if set to true           |
-| victoriametrics_vmauth_users | `{}`          | YAML with users, follow original format |
-| victoriametrics_vmauth_args  | `{}`          | additional arguments to pass to vmauth  |
+| Variable name                            | Default value | Description                             |
+| -----------------------------------------| ------------- | --------------------------------------- |
+| victoriametrics_vmauth                   | `false`       | enables vmauth if set to true           |
+| victoriametrics_vmauth_users             | `{}`          | YAML with users, follow original format |
+| victoriametrics_vmauth_unauthorized_user | `{}`          | YAML with unauthorized user config      |
+| victoriametrics_vmauth_args              | `{}`          | additional arguments to pass to vmauth  |
 
 Sample config:
 ```yaml
