@@ -6,7 +6,7 @@ victoriametrics_global_config_mode: env
 victoriametrics_singlenode: false
 victoriametrics_user: victoriametrics
 victoriametrics_group: "{{ victoriametrics_user }}"
-victoriametrics_version: 1.95.1
+victoriametrics_version: 1.133.0
 victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics
 victoriametrics_args: {}
