@@ -53,8 +53,7 @@
         src: "{{ item.path }}"
         dest: "{{ goss_test_directory }}/{{ item.path | basename }}"
         mode: "0644"
-      loop:
-        - "{{ test_files.files }}"
+      loop: "{{ test_files.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
 
