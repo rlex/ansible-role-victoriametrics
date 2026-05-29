@@ -10,7 +10,7 @@
 - name: Download victoriametrics files
   become: false
   ansible.builtin.get_url:
-    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_system | lower }}-{{
+    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_facts['system'] | lower }}-{{
       victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
     dest: /tmp/
     mode: "0755"
@@ -27,7 +27,7 @@
 - name: Unarchive victoriametrics files
   become: false
   ansible.builtin.unarchive:
-    src: /tmp/victoria-metrics-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz
+    src: /tmp/victoria-metrics-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_version }}.tar.gz
     remote_src: true
     dest: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}/
     creates: /tmp/victoriametrics_{{ victoriametrics_version }}_{{ victoriametrics_arch }}/victoria-metrics-prod

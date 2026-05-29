@@ -1,15 +1,15 @@
 ---
 - name: Decide architecture
   ansible.builtin.set_fact:
-    victoriametrics_arch: "{{ victoriametrics_arch_table[ansible_architecture].arch }}"
+    victoriametrics_arch: "{{ victoriametrics_arch_table[ansible_facts['architecture']].arch }}"
 - name: Create victoriametrics user
   ansible.builtin.import_tasks: user.yml
 - name: Install single-node victoriametrics
   ansible.builtin.import_tasks: singlenode.yml
-  when: victoriametrics_singlenode and victoriametrics_singlenode is defined
+  when: victoriametrics_singlenode
 - name: Istall victoriametrics cluster
   ansible.builtin.import_tasks: cluster.yml
-  when: victoriametrics_cluster and victoriametrics_cluster is defined
+  when: victoriametrics_cluster
 - name: Install victoriametrics vmutils
   ansible.builtin.import_tasks: vmutils.yml
-  when: victoriametrics_vmutils and victoriametrics_vmutils is defined
+  when: victoriametrics_vmutils

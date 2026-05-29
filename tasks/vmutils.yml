@@ -2,7 +2,7 @@
 - name: Download victoriametrics vmutils files
   become: false
   ansible.builtin.get_url:
-    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch
+    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch
       }}-v{{ victoriametrics_cluster_version }}.tar.gz
     dest: /tmp/
     mode: "0755"
@@ -19,7 +19,7 @@
 - name: Unarchive victoriametrics vmutils files
   become: false
   ansible.builtin.unarchive:
-    src: /tmp/vmutils-{{ ansible_system | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    src: /tmp/vmutils-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
     remote_src: true
     dest: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/
     creates: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmbackup-prod
@@ -42,7 +42,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmauth and victoriametrics_vmauth is defined
+  when: victoriametrics_vmauth
   notify:
     - Restart vmauth
 
@@ -53,7 +53,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmauth and victoriametrics_vmauth is defined
+  when: victoriametrics_vmauth
   notify:
     - Restart vmauth
 
@@ -65,7 +65,7 @@
     owner: "{{ victoriametrics_cluster_user }}"
     group: "{{ victoriametrics_cluster_user }}"
     mode: "0755"
-  when: victoriametrics_vmagent and victoriametrics_vmagent is defined
+  when: victoriametrics_vmagent
 
 - name: Create vmagent remote write relabel config files
   ansible.builtin.copy:
@@ -80,7 +80,7 @@
     group: root
     mode: "0644"
   loop: "{{ victoriametrics_vmagent_remotewrite_relabel_config_files }}"
-  when: victoriametrics_vmagent_remotewrite_relabel_config_files | length != 0 and victoriametrics_vmagent_remotewrite_relabel_config_files is defined
+  when: victoriametrics_vmagent_remotewrite_relabel_config_files | length > 0
   notify:
     - Restart vmagent
 
@@ -91,7 +91,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmagent and victoriametrics_vmagent is defined
+  when: victoriametrics_vmagent
   notify:
     - Restart vmagent
 
@@ -102,7 +102,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmagent and victoriametrics_vmagent is defined
+  when: victoriametrics_vmagent
   notify:
     - Restart vmagent
 
@@ -113,7 +113,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmalert and victoriametrics_vmalert is defined
+  when: victoriametrics_vmalert
   notify:
     - Restart vmalert
 
@@ -124,6 +124,6 @@
     owner: root
     group: root
     mode: "0644"
-  when: victoriametrics_vmalert and victoriametrics_vmalert is defined
+  when: victoriametrics_vmalert
   notify:
     - Restart vmalert
