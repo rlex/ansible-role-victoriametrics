@@ -81,3 +81,21 @@ victoriametrics_vmalert_remotewrite_url: http://localhost:8428
 victoriametrics_vmalert_remoteread_url: http://localhost:8428
 victoriametrics_vmalert_args: {}
 victoriametrics_vmalert_envs: {}
+# VMESTIMATOR
+victoriametrics_vmestimator: false
+victoriametrics_vmestimator_version: 0.1.8
+victoriametrics_vmestimator_config_mode: "{{ victoriametrics_global_config_mode }}"
+victoriametrics_vmestimator_http_listen_addr: :8490
+victoriametrics_vmestimator_args: {}
+victoriametrics_vmestimator_envs: {}
+victoriametrics_vmestimator_streams:
+  - interval: '15m'
+  - interval: '30m'
+  - interval: '15m'
+    group_by: ["__name__"]
+  - interval: '30m'
+    group_by: ["__name__"]
+  - interval: '15m'
+    group_by: ["job"]
+  - interval: '30m'
+    group_by: ["job"]

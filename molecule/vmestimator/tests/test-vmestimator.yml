@@ -1,0 +1,7 @@
+service:
+  vmestimator:
+    running: true
+
+port:
+  tcp:8490:
+    listening: true

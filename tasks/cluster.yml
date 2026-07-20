@@ -11,8 +11,18 @@
 - name: Download victoriametrics cluster files
   become: false
   ansible.builtin.get_url:
-    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/victoria-metrics-{{ ansible_facts['system'] | lower }}-{{
-      victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
+    url: >-
+      {{
+        'https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v'
+        ~ victoriametrics_cluster_version
+        ~ '/victoria-metrics-'
+        ~ ansible_facts['system'] | lower
+        ~ '-'
+        ~ victoriametrics_arch
+        ~ '-v'
+        ~ victoriametrics_cluster_version
+        ~ '-cluster.tar.gz'
+      }}
     dest: /tmp/
     mode: "0755"
   delegate_to: localhost
@@ -20,7 +30,9 @@
 - name: Create temporary directory
   become: false
   ansible.builtin.file:
-    path: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}
+    path: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
     state: directory
     mode: "0755"
   delegate_to: localhost
@@ -28,16 +40,28 @@
 - name: Unarchive victoriametrics cluster files
   become: false
   ansible.builtin.unarchive:
-    src: /tmp/victoria-metrics-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}-cluster.tar.gz
+    src: >-
+      {{ '/tmp/victoria-metrics-%s-%s-v%s-cluster.tar.gz'
+         | format(
+             ansible_facts['system'] | lower,
+             victoriametrics_arch,
+             victoriametrics_cluster_version
+           ) }}
     remote_src: true
-    dest: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/
-    creates: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmselect-prod
+    dest: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s/'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
+    creates: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s/vmselect-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
   delegate_to: localhost
   check_mode: false
 
 - name: Propagate vminsert binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vminsert-prod
+    src: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s/vminsert-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
     dest: /usr/local/bin/vminsert
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
@@ -48,7 +72,9 @@
 
 - name: Propagate vmselect binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmselect-prod
+    src: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s/vmselect-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
     dest: /usr/local/bin/vmselect
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
@@ -59,7 +85,9 @@
 
 - name: Propagate vmstorage binary
   ansible.builtin.copy:
-    src: /tmp/victoriametrics_cluster_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmstorage-prod
+    src: >-
+      {{ '/tmp/victoriametrics_cluster_%s_%s/vmstorage-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
     dest: /usr/local/bin/vmstorage
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"

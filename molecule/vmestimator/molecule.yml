@@ -1,0 +1,29 @@
+---
+role_name_check: 1
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: vmestimator
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+  options:
+    diff: true
+  env:
+    ANSIBLE_ROLES_PATH: ../../../
+  inventory:
+    group_vars:
+      all:
+        victoriametrics_vmestimator: true
+        victoriametrics_vmestimator_streams:
+          - interval: 15m
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
