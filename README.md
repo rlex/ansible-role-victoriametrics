@@ -7,6 +7,7 @@
 - [vmauth](#vmauth)
 - [vmagent](#vmagent)
 - [vmalert](#vmalert)
+- [vmestimator](#vmestimator)
 
 ## Intro
 
@@ -23,6 +24,8 @@ This role can manage:
   * vmbackup (installation only)
   * vmrestore (installation only)
   * vmctl (installation only)
+
+* [vmestimator](https://github.com/VictoriaMetrics/vmestimator) installation
 
 Or even all of that at once on single node, if for some reason you need it.
 
@@ -270,3 +273,17 @@ victoriametrics_vmalert_alert_rules:
       summary: '{% raw %}Exporter down{% endraw %}'
       description: '{% raw %}Prometheus node {{ $labels.instance }} is down{% endraw %}'
 ```
+
+## vmestimator
+
+Set `victoriametrics_vmestimator: true` to install the standalone `vmestimator` binary at `/usr/local/bin/vmestimator`.
+
+| Variable name | Default value | Description |
+| --- | --- | --- |
+| victoriametrics_vmestimator | `false` | Installs vmestimator when set to true |
+| victoriametrics_vmestimator_version | `0.1.8` | vmestimator release version |
+| victoriametrics_vmestimator_streams | See default configuration | Streams managed in `/etc/vmestimator/streams.yaml` |
+| victoriametrics_vmestimator_config_mode | `{{ victoriametrics_global_config_mode }}` | Configuration mode: `env` uses environment variables; `args` uses command-line flags |
+| victoriametrics_vmestimator_http_listen_addr | `:8490` | HTTP listen address |
+| victoriametrics_vmestimator_args | `{}` | Additional command-line arguments to pass to vmestimator |
+| victoriametrics_vmestimator_envs | `{}` | Additional environment variables to pass to vmestimator |

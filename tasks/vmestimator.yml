@@ -1,0 +1,89 @@
+---
+- name: Download vmestimator files
+  become: false
+  ansible.builtin.get_url:
+    url: >-
+      {{
+        'https://github.com/VictoriaMetrics/vmestimator/releases/download/v'
+        ~ victoriametrics_vmestimator_version
+        ~ '/vmestimator-'
+        ~ ansible_facts['system'] | lower
+        ~ '-'
+        ~ victoriametrics_arch
+        ~ '-v'
+        ~ victoriametrics_vmestimator_version
+        ~ '.tar.gz'
+      }}
+    dest: /tmp/
+    mode: "0755"
+  delegate_to: localhost
+
+- name: Create temporary vmestimator directory
+  become: false
+  ansible.builtin.file:
+    path: >-
+      {{ '/tmp/vmestimator_%s_%s'
+         | format(victoriametrics_vmestimator_version, victoriametrics_arch) }}
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+
+- name: Unarchive vmestimator files
+  become: false
+  ansible.builtin.unarchive:
+    src: >-
+      {{ '/tmp/vmestimator-%s-%s-v%s.tar.gz'
+         | format(
+             ansible_facts['system'] | lower,
+             victoriametrics_arch,
+             victoriametrics_vmestimator_version
+           ) }}
+    remote_src: true
+    dest: >-
+      {{ '/tmp/vmestimator_%s_%s/'
+         | format(victoriametrics_vmestimator_version, victoriametrics_arch) }}
+    creates: >-
+      {{ '/tmp/vmestimator_%s_%s/vmestimator-prod'
+         | format(victoriametrics_vmestimator_version, victoriametrics_arch) }}
+  delegate_to: localhost
+  check_mode: false
+
+- name: Propagate vmestimator binary
+  ansible.builtin.copy:
+    src: >-
+      {{ '/tmp/vmestimator_%s_%s/vmestimator-prod'
+         | format(victoriametrics_vmestimator_version, victoriametrics_arch) }}
+    dest: /usr/local/bin/vmestimator
+    mode: "0755"
+    owner: "{{ victoriametrics_user }}"
+    group: "{{ victoriametrics_group }}"
+  notify:
+    - Restart vmestimator
+
+- name: Create vmestimator configuration directory
+  ansible.builtin.file:
+    path: /etc/vmestimator
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Configure vmestimator streams
+  ansible.builtin.template:
+    src: vmestimator/streams.yaml.j2
+    dest: /etc/vmestimator/streams.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart vmestimator
+
+- name: Create vmestimator systemd service unit
+  ansible.builtin.template:
+    src: vmestimator/vmestimator.service.j2
+    dest: /etc/systemd/system/vmestimator.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart vmestimator

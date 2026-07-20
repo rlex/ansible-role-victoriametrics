@@ -55,3 +55,11 @@
     name: vmalert
     state: restarted
     enabled: true
+
+- name: Restart vmestimator
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: vmestimator
+    state: restarted
+    enabled: true
