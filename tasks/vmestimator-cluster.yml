@@ -1,0 +1,44 @@
+---
+- name: Install vmestimator binary
+  ansible.builtin.import_tasks: vmestimator.yml
+- name: Create vmestimator storage configuration directory
+  ansible.builtin.file:
+    path: /etc/vmestimator
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  when: victoriametrics_vmestimator_cluster_storage
+
+- name: Configure vmestimator storage streams
+  ansible.builtin.template:
+    src: vmestimator/streams.yaml.j2
+    dest: /etc/vmestimator/streams.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  when: victoriametrics_vmestimator_cluster_storage
+  notify:
+    - Restart vmestimator
+
+- name: Create vmestimator storage systemd service unit
+  ansible.builtin.template:
+    src: vmestimator/vmestimator-storage.service.j2
+    dest: /etc/systemd/system/vmestimator.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: victoriametrics_vmestimator_cluster_storage
+  notify:
+    - Restart vmestimator
+
+- name: Create vmestimator selector systemd service unit
+  ansible.builtin.template:
+    src: vmestimator/vmestimator-selector.service.j2
+    dest: /etc/systemd/system/vmestimator.service
+    owner: root
+    group: root
+    mode: "0644"
+  when: victoriametrics_vmestimator_cluster_selector
+  notify:
+    - Restart vmestimator

@@ -13,6 +13,9 @@
 - name: Install victoriametrics vmutils
   ansible.builtin.import_tasks: vmutils.yml
   when: victoriametrics_vmutils
-- name: Install vmestimator
-  ansible.builtin.import_tasks: vmestimator.yml
+- name: Install standalone vmestimator
+  ansible.builtin.import_tasks: vmestimator-standalone.yml
   when: victoriametrics_vmestimator
+- name: Install clustered vmestimator
+  ansible.builtin.import_tasks: vmestimator-cluster.yml
+  when: victoriametrics_vmestimator_cluster

@@ -8,6 +8,7 @@
 - [vmagent](#vmagent)
 - [vmalert](#vmalert)
 - [vmestimator](#vmestimator)
+  - [vmestimator cluster deployment](#vmestimator-cluster-deployment)
 
 ## Intro
 
@@ -57,7 +58,7 @@ Role variables related to single-node setup:
 | victoriametrics_singlenode        | `false`                              | installs single node if set to true      |
 | victoriametrics_user              | `victoriametrics`                    | victoriametrics system user              |
 | victoriametrics_group             | `{{ victoriametrics_cluster_user }}` | victoriametrics system group             |
-| victoriametrics_version           | `1.95.1`                             | victoriametrics version                  |
+| victoriametrics_version           | `1.148.0`                             | victoriametrics version                  |
 | victoriametrics_retention_period  | `3`                                  | data retention period in months          |
 | victoriametrics_storage_data_path | `/var/lib/victoria-metrics`          | path to victoriametrics data dir         |
 | victoriametrics_args              | `{}`                                 | optional args to pass to victoriametrics |
@@ -287,3 +288,22 @@ Set `victoriametrics_vmestimator: true` to install the standalone `vmestimator` 
 | victoriametrics_vmestimator_http_listen_addr | `:8490` | HTTP listen address |
 | victoriametrics_vmestimator_args | `{}` | Additional command-line arguments to pass to vmestimator |
 | victoriametrics_vmestimator_envs | `{}` | Additional environment variables to pass to vmestimator |
+
+### vmestimator cluster deployment
+
+Set `victoriametrics_vmestimator_cluster: true` and enable roles:
+`victoriametrics_vmestimator_cluster_storage` for remote-write ingestion
+or `victoriametrics_vmestimator_cluster_selector` for merged estimates.
+
+Storage nodes use `victoriametrics_vmestimator_streams` and expose local
+cardinality data at `/cardinality/metrics`. Selectors must set
+`victoriametrics_vmestimator_cluster_selector_storage_node` to the HTTP URLs
+of all storage nodes; they do not receive a streams configuration. Scrape
+selector `/metrics` endpoints for cluster-wide cardinality estimates.
+
+| Variable name | Default value | Description |
+| --- | --- | --- |
+| victoriametrics_vmestimator_cluster | `false` | Enables vmestimator cluster mode |
+| victoriametrics_vmestimator_cluster_storage | `false` | Configures this host as a storage node |
+| victoriametrics_vmestimator_cluster_selector | `false` | Configures this host as a selector node |
+| victoriametrics_vmestimator_cluster_selector_storage_nodes | `[]` | HTTP URLs of storage nodes queried by a selector |

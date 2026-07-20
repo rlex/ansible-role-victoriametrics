@@ -1,0 +1,18 @@
+---
+service:
+  vmestimator:
+    running: true
+
+port:
+  tcp:8490:
+    listening: true
+
+file:
+  /etc/vmestimator/streams.yaml:
+    exists: true
+  /etc/systemd/system/vmestimator.service:
+    exists: true
+    contains:
+      - 'Environment="config=/etc/vmestimator/streams.yaml"'
+      - 'Environment="cardinalityMetrics.exposeAt=/cardinality/metrics"'
+      - "ExecStart=/usr/local/bin/vmestimator -envflag.enable"

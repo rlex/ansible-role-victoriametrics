@@ -1,0 +1,66 @@
+---
+role_name_check: 1
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: vmestimator-storage-1
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - vmestimator_storage
+  - name: vmestimator-storage-2
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - vmestimator_storage
+  - name: vmestimator-selector
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+    networks:
+      - name: victoriametrics
+    groups:
+      - vmestimator_selector
+provisioner:
+  name: ansible
+  options:
+    diff: true
+  env:
+    ANSIBLE_ROLES_PATH: ../../../
+  inventory:
+    group_vars:
+      all:
+        victoriametrics_vmestimator_cluster: true
+        victoriametrics_global_config_mode: env
+      vmestimator_storage:
+        victoriametrics_vmestimator_cluster_storage: true
+        victoriametrics_vmestimator_cluster_storage_cardinality_metrics_expose_at: /cardinality/metrics
+        victoriametrics_vmestimator_streams:
+          - interval: 15m
+      vmestimator_selector:
+        victoriametrics_vmestimator_cluster_selector: true
+        victoriametrics_vmestimator_cluster_selector_storage_nodes:
+          - http://vmestimator-storage-1:8490
+          - http://vmestimator-storage-2:8490
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}

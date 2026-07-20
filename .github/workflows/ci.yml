@@ -68,6 +68,8 @@ jobs:
             scenario: cluster-with-utils
           - distro: ubuntu2204
             scenario: vmestimator
+          - distro: ubuntu2204
+            scenario: vmestimator-cluster
 
     steps:
       - name: Checkout codebase

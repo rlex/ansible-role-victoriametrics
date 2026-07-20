@@ -6,7 +6,7 @@ victoriametrics_global_config_mode: env
 victoriametrics_singlenode: false
 victoriametrics_user: victoriametrics
 victoriametrics_group: "{{ victoriametrics_user }}"
-victoriametrics_version: 1.133.0
+victoriametrics_version: 1.148.0
 victoriametrics_retention_period: 3
 victoriametrics_storage_data_path: /var/lib/victoria-metrics
 victoriametrics_args: {}
@@ -99,3 +99,19 @@ victoriametrics_vmestimator_streams:
     group_by: ["job"]
   - interval: '30m'
     group_by: ["job"]
+# VMESTIMATOR-CLUSTER
+victoriametrics_vmestimator_cluster: false
+victoriametrics_vmestimator_cluster_storage: false
+victoriametrics_vmestimator_cluster_selector: false
+# VMESTIMATOR-CLUSTER-STORAGE
+victoriametrics_vmestimator_cluster_storage_config_mode: "{{ victoriametrics_global_config_mode }}"
+victoriametrics_vmestimator_cluster_storage_http_listen_addr: :8490
+victoriametrics_vmestimator_cluster_storage_cardinality_metrics_expose_at: /cardinality/metrics
+victoriametrics_vmestimator_cluster_storage_args: {}
+victoriametrics_vmestimator_cluster_storage_envs: {}
+# VMESTIMATOR-CLUSTER-SELECTOR
+victoriametrics_vmestimator_cluster_selector_config_mode: "{{ victoriametrics_global_config_mode }}"
+victoriametrics_vmestimator_cluster_selector_http_listen_addr: :8490
+victoriametrics_vmestimator_cluster_selector_storage_node: []
+victoriametrics_vmestimator_cluster_selector_args: {}
+victoriametrics_vmestimator_cluster_selector_envs: {}
