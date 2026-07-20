@@ -2,8 +2,18 @@
 - name: Download victoriametrics vmutils files
   become: false
   ansible.builtin.get_url:
-    url: https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v{{ victoriametrics_cluster_version }}/vmutils-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch
-      }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    url: >-
+      {{
+        'https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v'
+        ~ victoriametrics_cluster_version
+        ~ '/vmutils-'
+        ~ ansible_facts['system'] | lower
+        ~ '-'
+        ~ victoriametrics_arch
+        ~ '-v'
+        ~ victoriametrics_cluster_version
+        ~ '.tar.gz'
+      }}
     dest: /tmp/
     mode: "0755"
   delegate_to: localhost
@@ -11,7 +21,9 @@
 - name: Create temporary directory
   become: false
   ansible.builtin.file:
-    path: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}
+    path: >-
+      {{ '/tmp/vmutils_%s_%s'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
     state: directory
     mode: "0755"
   delegate_to: localhost
@@ -19,16 +31,28 @@
 - name: Unarchive victoriametrics vmutils files
   become: false
   ansible.builtin.unarchive:
-    src: /tmp/vmutils-{{ ansible_facts['system'] | lower }}-{{ victoriametrics_arch }}-v{{ victoriametrics_cluster_version }}.tar.gz
+    src: >-
+      {{ '/tmp/vmutils-%s-%s-v%s.tar.gz'
+         | format(
+             ansible_facts['system'] | lower,
+             victoriametrics_arch,
+             victoriametrics_cluster_version
+           ) }}
     remote_src: true
-    dest: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/
-    creates: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/vmbackup-prod
+    dest: >-
+      {{ '/tmp/vmutils_%s_%s/'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
+    creates: >-
+      {{ '/tmp/vmutils_%s_%s/vmbackup-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch) }}
   delegate_to: localhost
   check_mode: false
 
 - name: Propagate vmutils binaries
   ansible.builtin.copy:
-    src: /tmp/vmutils_{{ victoriametrics_cluster_version }}_{{ victoriametrics_arch }}/{{ item }}-prod
+    src: >-
+      {{ '/tmp/vmutils_%s_%s/%s-prod'
+         | format(victoriametrics_cluster_version, victoriametrics_arch, item) }}
     dest: /usr/local/bin/{{ item }}
     mode: "0755"
     owner: "{{ victoriametrics_cluster_user }}"
