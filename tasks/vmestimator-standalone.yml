@@ -1,0 +1,30 @@
+---
+- name: Install vmestimator binary
+  ansible.builtin.import_tasks: vmestimator.yml
+- name: Create vmestimator configuration directory
+  ansible.builtin.file:
+    path: /etc/vmestimator
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Configure vmestimator streams
+  ansible.builtin.template:
+    src: vmestimator/streams.yaml.j2
+    dest: /etc/vmestimator/streams.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart vmestimator
+
+- name: Create vmestimator systemd service unit
+  ansible.builtin.template:
+    src: vmestimator/vmestimator.service.j2
+    dest: /etc/systemd/system/vmestimator.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart vmestimator

@@ -1,0 +1,18 @@
+---
+service:
+  vmestimator:
+    running: true
+
+port:
+  tcp:8490:
+    listening: true
+
+file:
+  /etc/vmestimator/streams.yaml:
+    exists: false
+  /etc/systemd/system/vmestimator.service:
+    exists: true
+    contains:
+      - 'Environment="storageNode=http://vmestimator-storage-1:8490,http://vmestimator-storage-2:8490"'
+      - "ExecStart=/usr/local/bin/vmestimator -envflag.enable"
+      - "!-config="
