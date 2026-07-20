@@ -66,6 +66,8 @@ jobs:
             scenario: singlenode
           - distro: ubuntu2204
             scenario: cluster-with-utils
+          - distro: ubuntu2204
+            scenario: vmestimator
 
     steps:
       - name: Checkout codebase
