@@ -277,7 +277,7 @@ victoriametrics_vmalert_alert_rules:
 
 ## vmestimator
 
-Set `victoriametrics_vmestimator: true` to install the standalone `vmestimator` binary at `/usr/local/bin/vmestimator`.
+Set `victoriametrics_vmestimator: true` to enable single-binary mode.
 
 | Variable name | Default value | Description |
 | --- | --- | --- |
@@ -295,15 +295,32 @@ Set `victoriametrics_vmestimator_cluster: true` and enable roles:
 `victoriametrics_vmestimator_cluster_storage` for remote-write ingestion
 or `victoriametrics_vmestimator_cluster_selector` for merged estimates.
 
-Storage nodes use `victoriametrics_vmestimator_streams` and expose local
-cardinality data at `/cardinality/metrics`. Selectors must set
-`victoriametrics_vmestimator_cluster_selector_storage_node` to the HTTP URLs
-of all storage nodes; they do not receive a streams configuration. Scrape
-selector `/metrics` endpoints for cluster-wide cardinality estimates.
+Both services can be run on single node. Pay attention that if you want
+to migrate from single-node install to cluster one, you will need to
+stop previous `vmestimator` service and manually remove old unit file
+since role doesn't automate migration.
+
+Ny default, storage nodes use  `victoriametrics_vmestimator_storage_streams` 
+and expose local cardinality data at `/cardinality/metrics`. Selectors must set
+`victoriametrics_vmestimator_cluster_selector_storage_nodes` to the HTTP URLs
+of all storage nodes; they do not receive a streams configuration. To scrape
+from selector, aggregating data from all storages, use `/cardinality/metrics`
+from 
 
 | Variable name | Default value | Description |
 | --- | --- | --- |
 | victoriametrics_vmestimator_cluster | `false` | Enables vmestimator cluster mode |
 | victoriametrics_vmestimator_cluster_storage | `false` | Configures this host as a storage node |
 | victoriametrics_vmestimator_cluster_selector | `false` | Configures this host as a selector node |
+| victoriametrics_vmestimator_cluster_storage_config_mode | `{{ victoriametrics_global_config_mode }}` | Storage configuration mode: `env` uses environment variables; `args` uses command-line flags |
+| victoriametrics_vmestimator_cluster_storage_http_listen_addr | `:8491` | Storage HTTP listen address |
+| victoriametrics_vmestimator_cluster_storage_cardinality_metrics_expose_at | `/cardinality/metrics` | Storage cardinality metrics endpoint |
+| victoriametrics_vmestimator_storage_streams | See default configuration | Storage streams managed in `/etc/vmestimator/streams.yaml` |
+| victoriametrics_vmestimator_cluster_storage_args | `{}` | Additional command-line arguments for a storage node |
+| victoriametrics_vmestimator_cluster_storage_envs | `{}` | Additional environment variables for a storage node |
+| victoriametrics_vmestimator_cluster_selector_config_mode | `{{ victoriametrics_global_config_mode }}` | Selector configuration mode: `env` uses environment variables; `args` uses command-line flags |
+| victoriametrics_vmestimator_cluster_selector_http_listen_addr | `:8490` | Selector HTTP listen address |
+| victoriametrics_vmestimator_cluster_selector_cardinality_metrics_expose_at | `/cardinality/metrics` | Selector cardinality metrics endpoint |
 | victoriametrics_vmestimator_cluster_selector_storage_nodes | `[]` | HTTP URLs of storage nodes queried by a selector |
+| victoriametrics_vmestimator_cluster_selector_args | `{}` | Additional command-line arguments for a selector node |
+| victoriametrics_vmestimator_cluster_selector_envs | `{}` | Additional environment variables for a selector node |

@@ -63,3 +63,25 @@
     name: vmestimator
     state: restarted
     enabled: true
+  listen: Restart installed vmestimator
+  when: victoriametrics_vmestimator | bool
+
+- name: Restart vmestimator-storage
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: vmestimator-storage
+    state: restarted
+    enabled: true
+  listen: Restart installed vmestimator
+  when: victoriametrics_vmestimator_cluster_storage | bool
+
+- name: Restart vmestimator-selector
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: vmestimator-selector
+    state: restarted
+    enabled: true
+  listen: Restart installed vmestimator
+  when: victoriametrics_vmestimator_cluster_selector | bool

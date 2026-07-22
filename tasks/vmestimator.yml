@@ -57,5 +57,4 @@
     mode: "0755"
     owner: "{{ victoriametrics_user }}"
     group: "{{ victoriametrics_group }}"
-  notify:
-    - Restart vmestimator
+  notify: Restart installed vmestimator
