@@ -59,8 +59,9 @@ provisioner:
           - interval: 15m
       vmestimator_selector:
         victoriametrics_vmestimator_cluster_selector: true
+        victoriametrics_vmestimator_cluster_selector_config_mode: args
         victoriametrics_vmestimator_cluster_selector_storage_nodes:
-          - http://vmestimator-storage-1:8490
-          - http://vmestimator-storage-2:8490
+          - http://vmestimator-storage-1:8491
+          - http://vmestimator-storage-2:8491
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}

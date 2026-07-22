@@ -10,6 +10,7 @@ Group={{ victoriametrics_group }}
 {% if victoriametrics_vmestimator_cluster_selector_config_mode == "env" %}
 Environment="storageNode={{ victoriametrics_vmestimator_cluster_selector_storage_nodes | join(',') }}"
 Environment="httpListenAddr={{ victoriametrics_vmestimator_cluster_selector_http_listen_addr }}"
+Environment="cardinalityMetrics_exposeAt={{ victoriametrics_vmestimator_cluster_selector_cardinality_metrics_expose_at }}"
 {% for env, env_value in victoriametrics_vmestimator_cluster_selector_envs.items() %}
 Environment="{{ env }}={{ env_value }}"
 {% endfor %}
@@ -17,7 +18,7 @@ ExecStart=/usr/local/bin/vmestimator -envflag.enable{% for flag, flag_value in v
 {% endif %}
 
 {% if victoriametrics_vmestimator_cluster_selector_config_mode == "args" %}
-ExecStart=/usr/local/bin/vmestimator{% for storage_node in victoriametrics_vmestimator_cluster_selector_storage_nodes %} -storageNode={{ storage_node }}{% endfor %} -httpListenAddr={{ victoriametrics_vmestimator_cluster_selector_http_listen_addr }}{% for flag, flag_value in victoriametrics_vmestimator_cluster_selector_args.items() %} -{{ flag }}={{ flag_value }}{% endfor %}
+ExecStart=/usr/local/bin/vmestimator{% for storage_node in victoriametrics_vmestimator_cluster_selector_storage_nodes %} -storageNode={{ storage_node }}{% endfor %} -httpListenAddr={{ victoriametrics_vmestimator_cluster_selector_http_listen_addr }} -cardinalityMetrics.exposeAt={{ victoriametrics_vmestimator_cluster_selector_cardinality_metrics_expose_at }}{% for flag, flag_value in victoriametrics_vmestimator_cluster_selector_args.items() %} -{{ flag }}={{ flag_value }}{% endfor %}
 {% endif %}
 
 SyslogIdentifier=vmestimator

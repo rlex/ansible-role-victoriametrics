@@ -1,18 +1,23 @@
 ---
 service:
-  vmestimator:
+  vmestimator-selector:
     running: true
 
 port:
   tcp:8490:
     listening: true
 
+http:
+  http://localhost:8490/cardinality/metrics:
+    status: 200
+    body:
+      - cardinality_estimate
+
 file:
   /etc/vmestimator/streams.yaml:
     exists: false
-  /etc/systemd/system/vmestimator.service:
+  /etc/systemd/system/vmestimator-selector.service:
     exists: true
     contains:
-      - 'Environment="storageNode=http://vmestimator-storage-1:8490,http://vmestimator-storage-2:8490"'
-      - "ExecStart=/usr/local/bin/vmestimator -envflag.enable"
+      - "ExecStart=/usr/local/bin/vmestimator -storageNode=http://vmestimator-storage-1:8491 -storageNode=http://vmestimator-storage-2:8491 -httpListenAddr=:8490 -cardinalityMetrics.exposeAt=/cardinality/metrics"
       - "!-config="
