@@ -16,39 +16,44 @@ Ansible role for [VictoriaMetrics](https://victoriametrics.com/)
 
 This role can manage:
 
-* Single-node installations
-* Cluster installations
-* Vmutils installations:
-  * vmalert
-  * vmagent
-  * vmauth
-  * vmbackup (installation only)
-  * vmrestore (installation only)
-  * vmctl (installation only)
-
-* [vmestimator](https://github.com/VictoriaMetrics/vmestimator) installation
+- Single-node installations
+- Cluster installations
+- Vmutils installations:
+  - vmalert
+  - vmagent
+  - vmauth
+  - vmbackup (installation only)
+  - vmrestore (installation only)
+  - vmctl (installation only)
+- [vmestimator](https://github.com/VictoriaMetrics/vmestimator) installation
 
 Or even all of that at once on single node, if for some reason you need it.
 
 ## Compatibility
+
 This role is compatible with any modern systemd-based distro using arm64 or amd64.
 
 ### Warning about configuration mode change
-At 12/12/2023, old method of configuring apps with arguments was deprecated. Instead, environment variables will be used.  
+
+At 12/12/2023, old method of configuring apps with arguments was deprecated. Instead, environment variables will be used.
 Transition to new env-based mode _should_ be smooth (at least i tried to keep full compatibility), since it should support all old parameters, but if you want to preserve old arguments-based configuration system, set
-```
+
+```text
 victoriametrics_global_config_mode: args
 ```
+
 You can also override it per service (search for "_config_mode" in variables). However, there is no guarantee that this method of configuration won't be removed in the future.
 
-Old _args variables, like victoriametrics_cluster_vmstorage_args, will still work with both old and new configuration method, however, you can also use new _envs variables like victoriametrics_cluster_vmstorage_envs to configure additional parameters for victoriametrics components. For info about that parameters, refer to [official victoriametrics docs](https://docs.victoriametrics.com/?highlight=envflag.enable#environment-variables) 
+Old _args variables, like victoriametrics_cluster_vmstorage_args, will still work with both old and new configuration method, however, you can also use new _envs variables like victoriametrics_cluster_vmstorage_envs to configure additional parameters for victoriametrics components. For info about that parameters, refer to [official victoriametrics docs](https://docs.victoriametrics.com/?highlight=envflag.enable#environment-variables)
 
 ## Single node
 
 Installing victoriametrics in single mode is as easy as setting
-```
+
+```text
 victoriametrics_singlenode: true
 ```
+
 And running this role. It will create user, systemd config, create folder for data and start listening on 127.0.0.1:8428 for both write and read requests.
 
 Role variables related to single-node setup:
@@ -102,12 +107,13 @@ victoriametrics_cluster_vminsert: true
 victoriametrics_cluster_vmselect: true
 ```
 
-This will install vmstorage, vminsert, vmselect, create directory for vmstorage, configure vmselect and vminsert to connect to local vmstorage node.  
-Victoriametrics cluster version will be inherited from victoriametrics_version by default.  
-Essentially you will get single-node "cluster".   
+This will install vmstorage, vminsert, vmselect, create directory for vmstorage, configure vmselect and vminsert to connect to local vmstorage node.
+Victoriametrics cluster version will be inherited from victoriametrics_version by default.
+Essentially you will get single-node "cluster".
 But if you're looking at cluster settings you're probably looking to spread them among multiple servers, so here is an example on how to do that:
 
 Example inventory:
+
 ```ini
 [victoriametrics:children]
 victoriametrics-vmstorage
@@ -123,8 +129,10 @@ insert_node2
 [victoriametrics-vmselect]
 select_node1
 select_node2
-``` 
+```
+
 In victoriametrics define following group_vars:
+
 ```yaml
 victoriametric_cluster: true
 victoriametrics_cluster_vmselect_storage_node:
@@ -136,17 +144,21 @@ victoriametrics_cluster_vminsert_storage_node:
   - storage_node2:8401
   - storage_node3:8401
 ```
+
 In victoriametrics-vmstorage group_vars:
+
 ```yaml
 victoriametrics_cluster_vmstorage: true
 ```
 
 In victoriametrics-vminsert group_vars:
+
 ```yaml
 victoriametrics_cluster_vminsert: true
 ```
 
 In victoriametrics-vmselect group_vars:
+
 ```yaml
 victoriametrics_cluster_vmselect: true
 ```
@@ -175,6 +187,7 @@ victoriametrics_vmutils_files:
 ## vmauth
 
 vmauth-related variables:
+
 | Variable name                            | Default value | Description                             |
 | -----------------------------------------| ------------- | --------------------------------------- |
 | victoriametrics_vmauth                   | `false`       | enables vmauth if set to true           |
@@ -183,6 +196,7 @@ vmauth-related variables:
 | victoriametrics_vmauth_args              | `{}`          | additional arguments to pass to vmauth  |
 
 Sample config:
+
 ```yaml
 victoriametrics_vmauth: true
 victoriametrics_vmauth_users:
@@ -200,6 +214,7 @@ victoriametrics_vmauth_users:
 ## vmagent
 
 vmagent-related variables:
+
 | Variable name                                            | Default value                        | Description                                         |
 | ---------------------------------------------------------| ------------------------------------ | --------------------------------------------------- |
 | victoriametrics_vmagent                                  | `false`                              | enables vmagent if set to true                      |
@@ -213,6 +228,7 @@ vmagent-related variables:
 | victoriametrics_vmagent_envs                             | `{}`                                 | additional environment variables to pass to vmagent |
 
 Sample config, adding prometheus label environment=production, setting tmp folder to /var/lib/vmagent/tmp (folder will be created by role with proper permissions), and adding single scrape job from localhost:
+
 ```yaml
 victoriametrics_vmagent: true
 victoriametrics_vmagent_global:
@@ -234,6 +250,7 @@ victoriametrics_vmagent_scrape_configs:
 ```
 
 You can also configure relabel configs for remote write using `victoriametrics_vmagent_remotewrite_relabel_config_files`. Each item in the array should have a `name` (file path) and `config` (YAML content):
+
 ```yaml
 victoriametrics_vmagent_remotewrite_relabel_config_files:
   - name: /etc/vmagent/remotewrite-relabel.yml
@@ -243,9 +260,10 @@ victoriametrics_vmagent_remotewrite_relabel_config_files:
         action: drop
 ```
 
-## vmalert 
+## vmalert
 
 vmalert-related variables:
+
 | Variable name                           | Default value           | Description                                                |
 | --------------------------------------- | ----------------------- | ---------------------------------------------------------- |
 | victoriametrics_vmalert                 | `false`                 | enables vmalert if set to true                             |
@@ -258,6 +276,7 @@ vmalert-related variables:
 | victoriametrics_vmalert_envs            | `{}`                    | additional environment variables to pass to vmalert        |
 
 Sample config, pointing to local victoriametrics instance for both streaming metrics, persisting vmalert state and local alertmanager instance for sending alerts, with single rule to check for exporters in "down" state:
+
 ```yaml
 victoriametrics_vmalert: true
 victoriametrics_vmalert_datasource_url: http://localhost:8428
@@ -300,12 +319,11 @@ to migrate from single-node install to cluster one, you will need to
 stop previous `vmestimator` service and manually remove old unit file
 since role doesn't automate migration.
 
-Ny default, storage nodes use  `victoriametrics_vmestimator_storage_streams` 
+By default, storage nodes use `victoriametrics_vmestimator_storage_streams`
 and expose local cardinality data at `/cardinality/metrics`. Selectors must set
 `victoriametrics_vmestimator_cluster_selector_storage_nodes` to the HTTP URLs
 of all storage nodes; they do not receive a streams configuration. To scrape
 from selector, aggregating data from all storages, use `/cardinality/metrics`
-from 
 
 | Variable name | Default value | Description |
 | --- | --- | --- |
