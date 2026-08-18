@@ -7,7 +7,7 @@
 - name: Install single-node victoriametrics
   ansible.builtin.import_tasks: singlenode.yml
   when: victoriametrics_singlenode
-- name: Istall victoriametrics cluster
+- name: Install victoriametrics cluster
   ansible.builtin.import_tasks: cluster.yml
   when: victoriametrics_cluster
 - name: Install victoriametrics vmutils
